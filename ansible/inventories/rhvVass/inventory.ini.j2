@@ -1,0 +1,40 @@
+# ## Configure 'ip' variable to bind kubernetes services on a
+# ## different ip than the default iface
+# ## We should set etcd_member_name for etcd cluster. The node that is not a etcd member do not need to set the value, or can set the empty string value.
+[all]
+master01.k8s.labs.vass.es   ansible_host=10.0.5.31   ip=10.0.5.31 etcd_member_name=etcd1
+master02.k8s.labs.vass.es   ansible_host=10.0.5.32   ip=10.0.5.32 etcd_member_name=etcd2
+master03.k8s.labs.vass.es   ansible_host=10.0.5.33   ip=10.0.5.33 etcd_member_name=etcd3
+worker01.k8s.labs.vass.es   ansible_host=10.0.5.34   ip=10.0.5.34
+worker02.k8s.labs.vass.es   ansible_host=10.0.5.35   ip=10.0.5.35
+worker03.k8s.labs.vass.es   ansible_host=10.0.5.36   ip=10.0.5.36
+
+# ## configure a bastion host if your nodes are not directly reachable
+# bastion ansible_host=x.x.x.x ansible_user=some_user
+
+[all:vars]
+yum_packages=['bash-completion','glusterfs-fuse',]
+
+[kube-master]
+master01.k8s.labs.vass.es
+master02.k8s.labs.vass.es
+master03.k8s.labs.vass.es
+
+
+[etcd]
+master01.k8s.labs.vass.es
+master02.k8s.labs.vass.es
+master03.k8s.labs.vass.es
+
+
+[kube-node]
+worker01.k8s.labs.vass.es
+worker02.k8s.labs.vass.es
+worker03.k8s.labs.vass.es
+
+[calico-rr]
+
+[k8s-cluster:children]
+kube-master
+kube-node
+calico-rr
