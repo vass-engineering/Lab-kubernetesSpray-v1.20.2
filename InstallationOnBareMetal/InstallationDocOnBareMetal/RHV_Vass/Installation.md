@@ -67,7 +67,7 @@ git clone https://github.com/GIT-VASS/kubernetesSpray-v1.16.6-glusterfs.git
 
 Execute bastion.sh to install some requirements in the bastion:
 ```
-kubernetesSpray-v1.16.6-glusterfs/InstallationTools/bastion.sh
+kubernetesSpray-v1.16.6-glusterfs/InstallationOnBareMetal/InstallationTools/bastion.sh
 ```
 
 Copy the SSH key to all the nodes:
@@ -84,7 +84,7 @@ for host in master01.k8s.labs.vass.es \
 
 Lunch the next ansible playbook to prepare the bastion:
 ```
-cd kubernetesSpray-v1.16.6-glusterfs/ansible/
+cd kubernetesSpray-v1.16.6-glusterfs/InstallationOnBareMetal/ansible/
 
 ansible-playbook  -i inventories/rhvVass/bastion playbooks/preparebastion.yaml
 ```

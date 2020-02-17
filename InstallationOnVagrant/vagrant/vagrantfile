@@ -1,0 +1,303 @@
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.hostmanager.enabled = true
+  config.hostmanager.manage_host = true
+  config.hostmanager.ignore_private_ip = false
+
+
+
+  config.vm.define "lbone-k8sbn" do |lbone|
+      lbone.vm.box = "centos/7"
+      lbone.vm.hostname = "lb-one.192.168.66.8.xip.io"
+      lbone.vm.network "private_network", ip: "192.168.66.8"
+      lbone.vm.provision "shell", path: "./nodes/config.sh"
+      lbone.vm.provider "virtualbox" do |v|
+          v.name = "lb-one-k8s"
+          v.memory = 512
+          v.cpus = 1
+      end
+  end
+
+  config.vm.define "mastertwo-k8s" do |mastertwo|
+      mastertwo.vm.box = "centos/7"
+      mastertwo.vm.hostname = "master-two.192.168.66.3.xip.io"
+      mastertwo.vm.network "private_network", ip: "192.168.66.3"
+      mastertwo.vm.provision "shell", path: "./nodes/config.sh"
+      mastertwo.vm.provider "virtualbox" do |v|
+        v.name = "master-two-k8s"
+        v.memory = 2000
+        v.cpus = 1
+        #
+         # Add first disk
+        #
+        unless File.exists?(".k8sStorage/master-two/sdb.vdi")
+        v.customize [
+          'createmedium', 'disk',
+          '--filename', ".k8sStorage/master-two/sdb.vdi",
+          '--format', 'VDI',
+          '--size', 20 * 1024
+        ]
+        end
+        v.customize [
+       'storageattach', :id,
+       '--storagectl', 'IDE',
+       '--port', 1,
+       '--device', 0,
+       '--type', 'hdd',
+       '--medium', ".k8sStorage/master-two/sdb.vdi"
+        ]
+      end
+  end
+
+  config.vm.define "masterthree-k8s" do |masterthree|
+      masterthree.vm.box = "centos/7"
+      masterthree.vm.hostname = "master-three.192.168.66.4.xip.io"
+      masterthree.vm.network "private_network", ip: "192.168.66.4"
+      masterthree.vm.provision "shell", path: "./nodes/config.sh"
+      masterthree.vm.provider "virtualbox" do |v|
+          v.name = "master-three-k8s"
+          v.memory = 2000
+          v.cpus = 1
+          #
+           # Add first disk
+          #
+          unless File.exists?(".k8sStorage/master-three/sdb.vdi")
+          v.customize [
+            'createmedium', 'disk',
+            '--filename', ".k8sStorage/master-three/sdb.vdi",
+            '--format', 'VDI',
+            '--size', 20 * 1024
+          ]
+          end
+          v.customize [
+         'storageattach', :id,
+         '--storagectl', 'IDE',
+         '--port', 1,
+         '--device', 0,
+         '--type', 'hdd',
+         '--medium', ".k8sStorage/master-three/sdb.vdi"
+          ]
+        #
+        # Increase portcount for second disk
+        #
+        v.customize [
+          'storagectl', :id,
+          '--name', 'IDE',
+          '--portcount', 2
+        ]
+      end
+  end
+
+  config.vm.define "workerone-k8s" do |workerone|
+      workerone.vm.box = "centos/7"
+      workerone.vm.hostname = "worker-one.192.168.66.5.xip.io"
+      workerone.vm.network "private_network", ip: "192.168.66.5"
+      workerone.vm.provision "shell", path: "./nodes/config.sh"
+      workerone.vm.provider "virtualbox" do |v|
+          v.name = "worker-one-k8s"
+          v.memory = 2000
+          v.cpus = 1
+      #
+       # Add first disk
+      #
+      unless File.exists?(".k8sStorage/worker-one/sdb.vdi")
+      v.customize [
+        'createmedium', 'disk',
+        '--filename', ".k8sStorage/worker-one/sdb.vdi",
+        '--format', 'VDI',
+        '--size', 20 * 1024
+      ]
+      end
+      v.customize [
+     'storageattach', :id,
+     '--storagectl', 'IDE',
+     '--port', 1,
+     '--device', 0,
+     '--type', 'hdd',
+     '--medium', ".k8sStorage/worker-one/sdb.vdi"
+      ]
+    #
+    # Increase portcount for second disk
+    #
+    v.customize [
+      'storagectl', :id,
+      '--name', 'IDE',
+      '--portcount', 2
+    ]
+    #
+    # Add second disk
+    #
+    unless File.exists?(".k8sStorage/worker-one/sdc.vdi")
+      v.customize [
+        'createmedium', 'disk',
+        '--filename', ".k8sStorage/worker-one/sdc.vdi",
+        '--format', 'VDI',
+        '--size', 50 * 1024
+      ]
+    end
+    v.customize [
+          'storageattach', :id,
+          '--storagectl', 'IDE',
+          '--port', 1,
+          '--device', 1,
+          '--type', 'hdd',
+          '--medium', ".k8sStorage/worker-one/sdc.vdi"
+        ]
+      end
+  end
+
+  config.vm.define "workertwo-k8s" do |workertwo|
+      workertwo.vm.box = "centos/7"
+      workertwo.vm.hostname = "worker-two.192.168.66.6.xip.io"
+      workertwo.vm.network "private_network", ip: "192.168.66.6"
+      workertwo.vm.provision "shell", path: "./nodes/config.sh"
+      workertwo.vm.provider "virtualbox" do |v|
+          v.name = "worker-two-k8s"
+          v.memory = 2000
+          v.cpus = 1
+
+          #
+           # Add first disk
+          #
+          unless File.exists?(".k8sStorage/worker-two/sdb.vdi")
+          v.customize [
+            'createmedium', 'disk',
+            '--filename', ".k8sStorage/worker-two/sdb.vdi",
+            '--format', 'VDI',
+            '--size', 20 * 1024
+          ]
+          end
+          v.customize [
+         'storageattach', :id,
+         '--storagectl', 'IDE',
+         '--port', 1,
+         '--device', 0,
+         '--type', 'hdd',
+         '--medium', ".k8sStorage/worker-two/sdb.vdi"
+          ]
+        #
+        # Increase portcount for second disk
+        #
+        v.customize [
+          'storagectl', :id,
+          '--name', 'IDE',
+          '--portcount', 2
+        ]
+        #
+        # Add second disk
+        #
+        unless File.exists?(".k8sStorage/worker-two/sdc.vdi")
+          v.customize [
+            'createmedium', 'disk',
+            '--filename', ".k8sStorage/worker-two/sdc.vdi",
+            '--format', 'VDI',
+            '--size', 50 * 1024
+          ]
+        end
+        v.customize [
+              'storageattach', :id,
+              '--storagectl', 'IDE',
+              '--port', 1,
+              '--device', 1,
+              '--type', 'hdd',
+              '--medium', ".k8sStorage/worker-two/sdc.vdi"
+            ]
+          end
+  end
+
+
+    config.vm.define "workerthree-k8s" do |workerthree|
+        workerthree.vm.box = "centos/7"
+        workerthree.vm.hostname = "worker-three.192.168.66.7.xip.io"
+        workerthree.vm.network "private_network", ip: "192.168.66.7"
+        workerthree.vm.provision "shell", path: "./nodes/config.sh"
+        workerthree.vm.provider "virtualbox" do |v|
+            v.name = "worker-three-k8s"
+            v.memory = 2000
+            v.cpus = 1
+
+            #
+             # Add first disk
+            #
+            unless File.exists?(".k8sStorage/worker-three/sdb.vdi")
+            v.customize [
+              'createmedium', 'disk',
+              '--filename', ".k8sStorage/worker-three/sdb.vdi",
+              '--format', 'VDI',
+              '--size', 20 * 1024
+            ]
+            end
+            v.customize [
+           'storageattach', :id,
+           '--storagectl', 'IDE',
+           '--port', 1,
+           '--device', 0,
+           '--type', 'hdd',
+           '--medium', ".k8sStorage/worker-three/sdb.vdi"
+            ]
+          #
+          # Increase portcount for second disk
+          #
+          v.customize [
+            'storagectl', :id,
+            '--name', 'IDE',
+            '--portcount', 2
+          ]
+          #
+          # Add second disk
+          #
+          unless File.exists?(".k8sStorage/worker-three/sdc.vdi")
+            v.customize [
+              'createmedium', 'disk',
+              '--filename', ".k8sStorage/worker-three/sdc.vdi",
+              '--format', 'VDI',
+              '--size', 50 * 1024
+            ]
+          end
+          v.customize [
+                'storageattach', :id,
+                '--storagectl', 'IDE',
+                '--port', 1,
+                '--device', 1,
+                '--type', 'hdd',
+                '--medium', ".k8sStorage/worker-three/sdc.vdi"
+              ]
+            end
+    end
+
+
+  config.vm.define "masterone-k8s" do |masterone|
+      masterone.vm.box = "centos/7"
+      masterone.vm.hostname = "master-one.192.168.66.2.xip.io"
+      masterone.vm.network "private_network", ip: "192.168.66.2"
+      masterone.vm.provision "file", source: "./password/password.txt", destination: "/tmp/password.txt"
+      masterone.vm.provision "file", source: "./ansible_conf/ansible.cfg", destination: "/tmp/ansible.cfg"
+      #masterone.vm.provision "file", source: "../ansible", destination: "/tmp/"
+      masterone.vm.provision "shell", path: "./bastion/configbastion.sh"
+      masterone.vm.provider "virtualbox" do |v|
+        v.name = "master-one-k8s"
+        v.memory = 2000
+        v.cpus = 1
+      #
+       # Add first disk
+      #
+      unless File.exists?(".k8sStorage/master-one/sdb.vdi")
+      v.customize [
+        'createmedium', 'disk',
+        '--filename', ".k8sStorage/master-one/sdb.vdi",
+        '--format', 'VDI',
+        '--size', 20 * 1024
+      ]
+      end
+      v.customize [
+     'storageattach', :id,
+     '--storagectl', 'IDE',
+     '--port', 1,
+     '--device', 0,
+     '--type', 'hdd',
+     '--medium', ".k8sStorage/master-one/sdb.vdi"
+      ]
+      end
+  end
+end

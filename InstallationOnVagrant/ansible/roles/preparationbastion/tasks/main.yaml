@@ -1,0 +1,42 @@
+---
+- name: Create software folder
+  file:
+    path: /root/kubernetes_installation
+    state: directory
+    mode: 0755
+
+- name: Create software folder for GlusterFs installation
+  file:
+    path: /root/glusterfs_installation
+    state: directory
+    mode: 0755
+
+- name: Ensure required packages are installed
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ yum_packages_bastion }}"
+
+- name: DownLoad KubeSprayProject
+  git:
+    repo: 'https://github.com/GIT-VASS/kubespray.git'
+    dest: /root/kubernetes_installation
+    version: master
+    clone: yes
+    update: no
+
+- name: DownLoad GlusterFSProject
+  git:
+    repo: 'https://github.com/GIT-VASS/gluster-kubernetes.git'
+    dest: /root/glusterfs_installation
+    version: master
+    clone: yes
+    update: no
+
+- name: File installation prepared to install
+  shell: cp -rfp /root/kubernetes_installation/inventory/sample /root/kubernetes_installation/inventory/mycluster
+
+- name: Copy inventory files to KubeSpray Project
+  template:
+    src: ../../../inventories/rhvVass/inventory.ini.j2
+    dest: /root/kubernetes_installation/inventory/mycluster/inventory.ini
