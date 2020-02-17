@@ -38,5 +38,5 @@
 
 - name: Copy inventory files to KubeSpray Project
   template:
-    src: ../../../inventories/rhvVass/inventory.ini.j2
+    src: ../../../inventories/vagrant_local/inventory.ini.j2
     dest: /root/kubernetes_installation/inventory/mycluster/inventory.ini

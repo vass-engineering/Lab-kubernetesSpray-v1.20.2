@@ -1,5 +1,5 @@
 [role_bastion]
-master01.k8s.labs.vass.es
+master-one.192.168.66.2.xip.io
 
 [role_bastion:vars]
 ansible_user=root
