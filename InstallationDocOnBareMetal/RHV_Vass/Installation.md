@@ -1,15 +1,46 @@
-Deploy Kubernetes 1.16. & CentOS7 + GlusterFs
-=============================================
+Deploy Kubernetes 1.16. & CentOS7 + GlusterFs in BareMetal
+==========================================================
 
 Requirements:
 -------------
 * 6 Virtual Machines or physical nodes.
   * master01.k8s.labs.vass.es
+    * cpu: 4
+    * memory:2793
+    * disks:
+      * sda 40 GiB
   * master02.k8s.labs.vass.es
+    * cpu: 4
+    * memory:2793
+    * disks:
+      * sda 40 GiB
   * master03.k8s.labs.vass.es
+    * cpu: 4
+    * memory:2793
+    * disks:
+      * sda 40 GiB
   * worker01.k8s.labs.vass.es
+    * cpu: 4
+    * memory:2793
+    * disks:
+      * sda 40 GiB
+      * sdb 40 GiB
   * worker02.k8s.labs.vass.es
+    * cpu: 4
+    * memory:2793
+    * disks:
+      * sda 40 GiB
+      * sdb 40 GiB
   * worker03.k8s.labs.vass.es
+    * cpu: 4
+    * memory:2793
+    * disks:
+      * sda 40 GiB
+      * sdb 40 GiB
+
+![alt text](https://github.com/felix-centenera/OKD_CentOS7.5/blob/okd3.6_CentOS7.5/img/Infraestruture.png)
+
+
 * All the hostnames must be resolved by a DNS.
 
 Prepare the node bastion:
