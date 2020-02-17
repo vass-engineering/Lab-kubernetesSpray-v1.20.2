@@ -1,4 +1,0 @@
----
-- hosts: role_bastion
-  roles:
-    - preparationbastion
