@@ -38,7 +38,11 @@ Requirements:
       * sda 40 GiB
       * sdb 40 GiB
 
+Diagram:
+-------
+
 ![alt text](https://github.com/GIT-VASS/kubernetesSpray-v1.16.6-glusterfs/blob/master/InstallationDocOnBareMetal/RHV_Vass/img/Diagram.jpg)
+
 
 * All the hostnames must be resolved by a DNS.
 
