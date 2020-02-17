@@ -1,8 +1,5 @@
 #!/bin/bash
 
-## Install Ansible in node bastion
-
-
 yum update -y
 yum upgrade -y
 yum --enablerepo=extras install epel-release -y
