@@ -38,8 +38,7 @@ Requirements:
       * sda 40 GiB
       * sdb 40 GiB
 
-![alt text](https://github.com/felix-centenera/OKD_CentOS7.5/blob/okd3.6_CentOS7.5/img/Infraestruture.png)
-
+![alt text](https://github.com/GIT-VASS/kubernetesSpray-v1.16.6-glusterfs/blob/master/InstallationDocOnBareMetal/RHV_Vass/img/Diagram.jpg)
 
 * All the hostnames must be resolved by a DNS.
 
