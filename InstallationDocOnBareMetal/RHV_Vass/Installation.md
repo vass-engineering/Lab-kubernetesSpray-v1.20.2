@@ -1,27 +1,42 @@
-Deploy Kubernetes 1.16. & CentOS7
-=================================
+Deploy Kubernetes 1.16. & CentOS7 + GlusterFs
+=============================================
 
-Download the full project in the bastion machine
-------------------------------------------------
-```
-cd /root
+Requirements:
+-------------
+* 6 Virtual Machines or physical nodes.
+  * master01.k8s.labs.vass.es
+  * master02.k8s.labs.vass.es
+  * master03.k8s.labs.vass.es
+  * worker01.k8s.labs.vass.es
+  * worker02.k8s.labs.vass.es
+  * worker03.k8s.labs.vass.es
+* All the hostnames must be resolved by a DNS.
 
-yum install git -y
-
-git clone https://github.com/felix-centenera/baremetal_kubespray_kubernetes.git
-```
-
-Execute bastion.sh to install some requirements in the bastion
----------------------------------------------------------------
-```
-cd baremetal_kubespray_kubernetes/InstallationTools
-
-./bastion.sh
-```
-
-Copy SSH key too all the nodes
+Prepare the node bastion:
 ------------------------------
 
+Login in the bastion, in our case master01.k8s.labs.vass.es will be the bastion:
+```
+ssh root@master01.k8s.labs.vass.es
+```
+
+Install git:
+```
+yum install git -y
+```
+
+Clone our project from github in root directory:
+```
+cd /root
+git clone https://github.com/GIT-VASS/kubernetesSpray-v1.16.6-glusterfs.git
+```
+
+Execute bastion.sh to install some requirements in the bastion:
+```
+kubernetesSpray-v1.16.6-glusterfs/InstallationTools/bastion.sh
+```
+
+Copy the SSH key to all the nodes:
 ```
 for host in master01.k8s.labs.vass.es \
             master02.k8s.labs.vass.es \
@@ -33,108 +48,64 @@ for host in master01.k8s.labs.vass.es \
             done
 ```
 
-Ansible to prepare the bastion
-------------------------------
+Lunch the next ansible playbook to prepare the bastion:
 ```
-cd ../ansible/
+cd kubernetesSpray-v1.16.6-glusterfs/ansible/
 
-```
-pwd: /root/baremetal_kubespray_kubernetes/ansible
-
-```
 ansible-playbook  -i inventories/rhvVass/bastion playbooks/preparebastion.yaml
 ```
 
-Ansible to prepare the nodes
-------------------------------
+
+Prepare the rest of nodes:
+--------------------------
 ```
 ansible-playbook  -i /root/kubernetes_installation/inventory/mycluster/inventory.ini playbooks/preparationnodes.yaml
 ```
 
-Start kubernetes installation
+Start kubernetes installation:
 ------------------------------
 ```
 cd /root/kubernetes_installation
 pip install --user -r requirements.txt
 ansible-playbook -i inventory/mycluster/inventory.ini  cluster.yml
 ```
-Prepare dashboard:
-------------------------------
+Prepare dashboard for Kubernetes:
+--------------------------------
+
+Check your cluster info where you will find the URL of yor dashboard:
 ```
  kubectl cluster-info
-  156  kubectl create serviceaccount dashboard-admin-sa
-  157  kubectl create clusterrolebinding dashboard-admin-sa
-  158  kubectl create clusterrolebinding dashboard-admin-sa  --clusterrole=cluster-admin --serviceaccount=default:dashboard-admin-sa
-  159  kubectl get secrets
-  160  kubectl describe secret dashboard-admin-sa-token-svhm2
 ```
- ansible  -i inventory/mycluster/inventory.ini all  -a "lsblk"
 
-master01.k8s.labs.vass.es | CHANGED | rc=0 >>
-NAME            MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
-sda               8:0    0  40G  0 disk
-├─sda1            8:1    0   1G  0 part /boot
-└─sda2            8:2    0  39G  0 part
-  ├─centos-root 253:0    0  36G  0 lvm  /
-  └─centos-swap 253:1    0   3G  0 lvm  
-sr0              11:0    1   1G  0 rom  
+Create a service-account, a clusterrolebinding and clusterrolebinding:
+```
+ kubectl create serviceaccount dashboard-admin-sa
+ kubectl create clusterrolebinding dashboard-admin-sa
+ kubectl create clusterrolebinding dashboard-admin-sa  --clusterrole=cluster-admin --serviceaccount=default:dashboard-admin-sa
+```
 
-master02.k8s.labs.vass.es | CHANGED | rc=0 >>
-NAME            MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
-sda               8:0    0  40G  0 disk
-├─sda1            8:1    0   1G  0 part /boot
-└─sda2            8:2    0  39G  0 part
-  ├─centos-root 253:0    0  36G  0 lvm  /
-  └─centos-swap 253:1    0   3G  0 lvm  
-sr0              11:0    1   1G  0 rom  
+Check the secret that you can use to login in your dashboard:
+```
+ kubectl get secrets
+ kubectl describe secret dashboard-admin-sa-token-svhm2
+```
 
-master03.k8s.labs.vass.es | CHANGED | rc=0 >>
-NAME            MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
-sda               8:0    0  40G  0 disk
-├─sda1            8:1    0   1G  0 part /boot
-└─sda2            8:2    0  39G  0 part
-  ├─centos-root 253:0    0  36G  0 lvm  /
-  └─centos-swap 253:1    0   3G  0 lvm  
-sr0              11:0    1   1G  0 rom  
+Deploy GlusterFS in Kubernetes:
+------------------------------
+Check that all your nodes has glusterfs client installed:
 
-worker01.k8s.labs.vass.es | CHANGED | rc=0 >>
-NAME            MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
-sda               8:0    0  40G  0 disk
-├─sda1            8:1    0   1G  0 part /boot
-└─sda2            8:2    0  39G  0 part
-  ├─centos-root 253:0    0  36G  0 lvm  /
-  └─centos-swap 253:1    0   3G  0 lvm  
-sdb               8:16   0  40G  0 disk
-sr0              11:0    1   1G  0 rom  
-
-worker02.k8s.labs.vass.es | CHANGED | rc=0 >>
-NAME            MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
-sda               8:0    0  40G  0 disk
-├─sda1            8:1    0   1G  0 part /boot
-└─sda2            8:2    0  39G  0 part
-  ├─centos-root 253:0    0  35G  0 lvm  /
-  └─centos-swap 253:1    0   4G  0 lvm  
-sdb               8:16   0  40G  0 disk
-sr0              11:0    1   1G  0 rom  
-
-worker03.k8s.labs.vass.es | CHANGED | rc=0 >>
-NAME            MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
-sda               8:0    0  40G  0 disk
-├─sda1            8:1    0   1G  0 part /boot
-└─sda2            8:2    0  39G  0 part
-  ├─centos-root 253:0    0  36G  0 lvm  /
-  └─centos-swap 253:1    0   3G  0 lvm  
-sdb               8:16   0  40G  0 disk
-sr0              11:0    1   1G  0 rom  
-
+```
+cd /root/kubernetes_installation
 ansible  -i inventory/mycluster/inventory.ini all  -a "glusterfs --version"
-worker01.k8s.labs.vass.es | CHANGED | rc=0 >>
-glusterfs 7.2
+```
+*Example exit: worker01.k8s.labs.vass.es | CHANGED | rc=0 >> glusterfs 7.2*
 
-
+Create the topology file for glusterfs:
+```
 cd /root/glusterfs_installation/deploy/
 cp topology.json.sample topology.json
 vi topology.json
+
 cat topology.json
 {
   "clusters": [
@@ -192,56 +163,52 @@ cat topology.json
     }
   ]
 }
+```
+
+Deploy glusterfs:
+
+***Before to deploy decide the user-key variable and the admin-key variable***
+
+*user-key: Secret string for general heketi users. heketi users have access to only Volume APIs. Used in dynamic provisioning. This is a required argument.*
+
+*admin-key:Secret string for heketi admin user. heketi admin has access to all APIs and commands. This is a required argument.*
 
 
 ./gk-deploy -g \
- --user-key MyUserStrongKey \
- --admin-key MyAdminStrongKey \
+ --user-key <MyUserStrongKey> \
+ --admin-key <MyAdminStrongKey> \
  -l /tmp/heketi_deployment.log \
  -v topology.json
 
-
-
-./gk-deploy -g \
- --user-key MyUserStrongKey \
- --admin-key MyAdminStrongKey \
- -l /tmp/heketi_deployment.log \
- -v topology.json
-
-user-key: Secret string for general heketi users. heketi users have access
-              to only Volume APIs. Used in dynamic provisioning. This is a
-              required argument.
-admin-key:Secret string for heketi admin user. heketi admin has access to
-              all APIs and commands. This is a required argument.
-
-
+```
 ./gk-deploy -g --user-key kubernetes --admin-key kubernetesadmin -l /tmp/heketi_deployment.log -v topology.json
+...
+...
+...
+...Deployment complete!
+```
 
+Check HEKETI status:
 
-For dynamic provisioning, create a StorageClass similar to this:
+```
+export HEKETI_CLI_SERVER=$(kubectl get svc/heketi --template 'http://{{.spec.clusterIP}}:{{(index .spec.ports 0).port}}')
+echo $HEKETI_CLI_SERVER
+curl $HEKETI_CLI_SERVER/hello
 
----
-apiVersion: storage.k8s.io/v1beta1
-kind: StorageClass
-metadata:
-  name: glusterfs-storage
-provisioner: kubernetes.io/glusterfs
-parameters:
-  resturl: "http://10.233.112.7:8080"
-  restuser: "user"
-  restuserkey: "kubernetes"
+...Hello from Heketi
+```
 
+Create a StorageClass:
+-----------------------
+Decode the ${ADMIN_KEY} used before:
 
-Deployment complete!
-
-
-
-# step 6. 创建storageclass，来自动为pvc创建pv
-
-./gk-deploy -g --user-key kubernetes --admin-key kubernetesadmin -l /tmp/heketi_deployment.log -v topology.json
 SECRET_KEY=`echo -n "${ADMIN_KEY}" | base64`
+```
 SECRET_KEY=`echo -n "kubernetesadmin" | base64`
+```
 
+Create a secret in order to access to heketi from the StorageClass:
+```
 cat << EOF | kubectl apply -f -
 apiVersion: v1
 kind: Secret
@@ -254,15 +221,24 @@ data:
 type: kubernetes.io/glusterfs
 EOF
 
+...
+...
+...
 secret/heketi-secret created
+```
 
 
+Set HEKETI_CLI_SERVER variable before to create the StorageClass:
+```
 export HEKETI_CLI_SERVER=$(kubectl get svc/heketi --template 'http://{{.spec.clusterIP}}:{{(index .spec.ports 0).port}}')
+
 echo $HEKETI_CLI_SERVER
-curl $HEKETI_CLI_SERVER/hello
+...
+http://10.233.60.171:8080
+```
+Create the StorageClass:
 
-Hello from Heketi
-
+```
 cat << EOF | kubectl apply -f -
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
@@ -277,23 +253,30 @@ parameters:
   volumetype: "replicate:3"
 EOF
 
+```
 
+
+
+Configure heketi-client if you want to communicate with heketi(Optional):
+-------------------------------------------------------------------------
+Download heketi client:
+```
 mkdir -p /root/heketi-client
 cd /root/heketi-client
- yum install wget
+yum install wget
 curl -s https://api.github.com/repos/heketi/heketi/releases/latest   | grep browser_download_url   | grep linux.amd64   | cut -d '"' -f 4   | wget -qi -
-
 for i in `ls | grep heketi | grep .tar.gz`; do tar xvf $i; done
-
 cd heketi/
 cp ./heketi/heketi-cli /usr/local/bi
  heketi-cli --version
 heketi-cli v9.0.0
+```
 
-export HEKETI_CLI_SERVER=$(kubectl get svc/heketi --template 'http://{{.spec.clusterIP}}:{{(index .spec.ports 0).port}}')
-echo $HEKETI_CLI_SERVER
-http://10.233.60.171:8080
+Now you can communicate with your glsuter:
 
+heketi-cli cluster list --user admin --secret <$ADMIN_KEY>
+
+```
 heketi-cli cluster list --user admin --secret kubernetesadmin
 
 Clusters:
@@ -332,21 +315,38 @@ Cluster Id: b6aea255961a90ddc2c720e7466e224f
         Durability Type: replicate
         Replica: 3
         Snapshot: Disabled
+```
 
 
+Configure StorageClass glusterfs-storage as your default StorageClass:
+----------------------------------------------------------------------
 
+
+Check the name of your storageclass:
+```
 k get StorageClass
 NAME                PROVISIONER               AGE
 glusterfs-storage   kubernetes.io/glusterfs   10m
+```
 
-kubectl patch storageclass <your-class-name> -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+Patch the StorageClass as the default StorageClass:
 
+*kubectl patch storageclass <your-class-name> -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'*
+
+```
 kubectl patch storageclass glusterfs-storage -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 
+...
+...
+...
 storageclass.storage.k8s.io/glusterfs-storage patched
+```
 
 
-
+Test your glusterfs Creating a pvc:
+-----------------------------------
+Create the pvc file yaml (testglusterfs.yaml):
+```
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
@@ -358,3 +358,20 @@ spec:
     requests:
       storage: 250Mi
   storageClassName: glusterfs-storage
+```
+
+Create the pvc in Kubernetes and check that the pvc bound a pv:
+```
+k create -f testglusterfs.pvc
+k get pvc
+...
+...
+...
+NAME            STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS        AGE
+testglusterfs   Bound    pvc-a7d23a03-c3b7-45cc-adc1-9974a68982c6   1Gi        RWX            glusterfs-storage   5d1h
+
+
+k get pv
+glusterfs-storage            3d22h
+pvc-a7d23a03-c3b7-45cc-adc1-9974a68982c6   1Gi        RWX            Delete           Bound    default/testglusterfs
+```
