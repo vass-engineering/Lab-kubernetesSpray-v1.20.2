@@ -49,7 +49,7 @@ Diagram:
 ![alt text](https://github.com/GIT-VASS/kubernetesSpray-v1.16.6-glusterfs/blob/master/InstallationOnBareMetal/DocOnBareMetal/RHV_Vass/img/Diagram.jpg)
 
 
-* All the hostnames must be resolved by a DNS.
+* All the hostnames must be resolved by a DNS or set hostnames in the /etc/hosts of all the VMs. We will use a DNS
 
 Prepare the node bastion:
 ------------------------------
@@ -87,7 +87,7 @@ for host in master01.k8s.labs.vass.es \
             done
 ```
 
-Lunch the next ansible playbook to prepare the bastion:
+Launch the next ansible playbook to prepare the bastion:
 ```
 cd kubernetesSpray-v1.16.6-glusterfs/InstallationOnBareMetal/ansible/
 

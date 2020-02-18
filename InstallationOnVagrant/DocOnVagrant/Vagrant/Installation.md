@@ -4,7 +4,7 @@ Deploy Kubernetes 1.16. & CentOS7 + GlusterFs in Vagrant
 Requirements:
 -------------
 * 6 Virtual Machines or physical nodes.
-  * master01.k8s.labs.vass.es
+  * master-one.192.168.66.2.xip.io
     * cpu: 4
     * memory:2000
     * disks:
@@ -49,7 +49,7 @@ Diagram:
 ![alt text](https://github.com/GIT-VASS/kubernetesSpray-v1.16.6-glusterfs/blob/master/InstallationOnVagrant/DocOnVagrant/Vagrant/img/Diagram.jpg)
 
 
-* All the hostnames must be resolved by a DNS.
+* All the hostnames must be resolved by a DNS or set hostnames in the /etc/hosts of all the VMs. We will use xip.io as the hostname which will works as a DNS.
 
 Clone the project and create the infrastructure:
 -------------------------------------------------
@@ -71,14 +71,7 @@ vagrant ssh masterone-k8s
 sudo su
 ```
 
-
-Clone our project from github in root directory:
-```
-cd /root
-git clone https://github.com/GIT-VASS/kubernetesSpray-v1.16.6-glusterfs.git
-```
-
-Lunch the next ansible playbook to prepare the bastion:
+Launch the next ansible playbook to prepare the bastion:
 ```
 cd kubernetesSpray-v1.16.6-glusterfs/InstallationOnVagrant/ansible/
 ansible-playbook  -i inventories/vagrant_local/bastion playbooks/preparebastion.yaml
@@ -407,7 +400,10 @@ glusterfs-storage            3d22h
 pvc-a7d23a03-c3b7-45cc-adc1-9974a68982c6   1Gi        RWX            Delete           Bound    default/testglusterfs
 ```
 
-Option add k alias for kubectl:
+Optional, add k as alias for kubectl:
 -----------------------------------
+```
+cd $home
 vi ./.bashr
 alias k='kubectl'
+```
