@@ -87,6 +87,11 @@ cd /root/kubernetes_installation
 pip install --user -r requirements.txt
 ansible-playbook -i inventory/mycluster/inventory.ini  cluster.yml
 ```
+
+Details of the successfully installation:
+
+![alt text](https://github.com/GIT-VASS/kubernetesSpray-v1.16.6-glusterfs/blob/master/InstallationOnVagrant/DocOnVagrant/Vagrant/img/InstallationAnsible.jpg)
+
 Prepare dashboard for Kubernetes:
 --------------------------------
 
@@ -118,7 +123,7 @@ ansible  -i inventory/mycluster/inventory.ini all  -a "glusterfs --version"
 ```
 *Example exit: worker01.k8s.labs.vass.es | CHANGED | rc=0 >> glusterfs 7.2*
 
-This installation processs create the topology file for glusterfs, if you have modified the inventory for Vagrnat check the next file:
+This installation processs create the topology file for glusterfs, if you have modified the inventory for Vagrant check the next file:
 ```
 cd /root/glusterfs_installation/deploy/
 cat topology.json

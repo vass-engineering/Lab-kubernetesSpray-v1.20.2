@@ -46,7 +46,7 @@ Annotations:
 Diagram:
 -------
 
-![alt text](https://github.com/GIT-VASS/kubernetesSpray-v1.16.6-glusterfs/blob/master/InstallationDocOnBareMetal/RHV_Vass/img/Diagram.jpg)
+![alt text](https://github.com/GIT-VASS/kubernetesSpray-v1.16.6-glusterfs/blob/master/InstallationOnBareMetal/DocOnBareMetal/RHV_Vass/img/Diagram.jpg)
 
 
 * All the hostnames must be resolved by a DNS.
@@ -108,6 +108,11 @@ cd /root/kubernetes_installation
 pip install --user -r requirements.txt
 ansible-playbook -i inventory/mycluster/inventory.ini  cluster.yml
 ```
+
+Details of the successfully installation:
+
+![alt text](https://github.com/GIT-VASS/kubernetesSpray-v1.16.6-glusterfs/blob/master/InstallationOnBareMetal/DocOnBareMetal/RHV_Vass/img/InstallationAnsible.jpg)
+
 Prepare dashboard for Kubernetes:
 --------------------------------
 
