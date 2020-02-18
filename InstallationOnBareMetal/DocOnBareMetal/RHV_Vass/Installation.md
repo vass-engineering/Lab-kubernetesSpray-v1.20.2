@@ -38,6 +38,11 @@ Requirements:
       * sda 40 GiB
       * sdb 40 GiB
 
+Annotations:
+-----------
+* Calico as Network: calico-rr
+* GlusterFS as Storage Solution
+
 Diagram:
 -------
 
@@ -51,10 +56,13 @@ Prepare the node bastion:
 
 Login in the bastion, in our case master01.k8s.labs.vass.es will be the bastion:
 ```
-vagrant ssh masterone-k8s
-sudo su
+ssh root@master01.k8s.labs.vass.es
 ```
 
+Install git:
+```
+yum install git -y
+```
 
 Clone our project from github in root directory:
 ```
@@ -62,10 +70,28 @@ cd /root
 git clone https://github.com/GIT-VASS/kubernetesSpray-v1.16.6-glusterfs.git
 ```
 
+Execute bastion.sh to install some requirements in the bastion:
+```
+kubernetesSpray-v1.16.6-glusterfs/InstallationOnBareMetal/InstallationTools/bastion.sh
+```
+
+Copy the SSH key to all the nodes:
+```
+for host in master01.k8s.labs.vass.es \
+            master02.k8s.labs.vass.es \
+            master03.k8s.labs.vass.es \
+            worker01.k8s.labs.vass.es \
+            worker02.k8s.labs.vass.es \
+            worker03.k8s.labs.vass.es;\
+            do ssh-copy-id $host; \
+            done
+```
+
 Lunch the next ansible playbook to prepare the bastion:
 ```
-cd kubernetesSpray-v1.16.6-glusterfs/InstallationOnVagrant/ansible/
-ansible-playbook  -i inventories/vagrant_local/bastion playbooks/preparebastion.yaml
+cd kubernetesSpray-v1.16.6-glusterfs/InstallationOnBareMetal/ansible/
+
+ansible-playbook  -i inventories/rhvVass/bastion playbooks/preparebastion.yaml
 ```
 
 

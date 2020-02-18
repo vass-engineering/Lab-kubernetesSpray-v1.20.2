@@ -13,7 +13,7 @@ worker03.k8s.labs.vass.es   ansible_host=10.0.5.36   ip=10.0.5.36
 # bastion ansible_host=x.x.x.x ansible_user=some_user
 
 [all:vars]
-yum_packages=['bash-completion','glusterfs-fuse',]
+yum_packages=['bash-completion','glusterfs-fuse','kubectl']
 
 [kube-master]
 master01.k8s.labs.vass.es

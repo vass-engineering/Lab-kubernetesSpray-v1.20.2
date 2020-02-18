@@ -7,3 +7,5 @@ This project describe how to deploy Kubernetes using kubernetesSpray project + G
 We have create two forks, one for kubernetesSpray project and another one for GlusterFS, where we have fixed  some issues detected, we used  both forks to deploy kubernetes.
 
 In order to deploy Kubernetes in baremetal you can use the documentation from the file InstallationOnBareMetal/InstallationDocOnBareMetal/RHV_Vass/installation.md
+
+In order to deploy Kubernetes in Vagrant you can use the documentation from the file InstallationOnVagrant/InstallationDocOnVagrant/Vagrant/Installation.md

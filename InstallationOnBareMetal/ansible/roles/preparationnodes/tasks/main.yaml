@@ -11,6 +11,16 @@
     gpgcheck: no
     enabled: yes
 
+- name: Add Kubernetes
+  yum_repository:
+    name: Kubernetes
+    description: Kubernetes
+    baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+    gpgcheck: no
+    enabled: yes
+    repo_gpgcheck: yes
+    gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+
 - name: Ensure required packages are installed
   package:
     name: "{{ item }}"
@@ -64,6 +74,7 @@
       - 24007/tcp
       - 24008/tcp
       - 49152-49251/tcp
+      - 8080/tcp
 
 
 - name: net.ipv4.ip_forward=1

@@ -1,4 +1,4 @@
-Deploy Kubernetes 1.16. & CentOS7 + GlusterFs in BareMetal
+Deploy Kubernetes 1.16. & CentOS7 + GlusterFs in Vagrant
 ==========================================================
 
 Requirements:
@@ -6,42 +6,47 @@ Requirements:
 * 6 Virtual Machines or physical nodes.
   * master01.k8s.labs.vass.es
     * cpu: 4
-    * memory:2793
+    * memory:2000
     * disks:
       * sda 40 GiB
-  * master02.k8s.labs.vass.es
+  * master-two.192.168.66.3.xip.io
     * cpu: 4
-    * memory:2793
+    * memory:2000
     * disks:
       * sda 40 GiB
-  * master03.k8s.labs.vass.es
+  * master-three.192.168.66.4.xip.io
     * cpu: 4
-    * memory:2793
+    * memory:2000
     * disks:
       * sda 40 GiB
-  * worker01.k8s.labs.vass.es
+  * worker-one.192.168.66.5.xip.io
     * cpu: 4
-    * memory:2793
+    * memory:2000
     * disks:
       * sda 40 GiB
       * sdb 40 GiB
-  * worker02.k8s.labs.vass.es
+  * worker-two.192.168.66.6.xip.io
     * cpu: 4
-    * memory:2793
+    * memory:2000
     * disks:
       * sda 40 GiB
       * sdb 40 GiB
-  * worker03.k8s.labs.vass.es
+  * worker-three.192.168.66.7.xip.io
     * cpu: 4
-    * memory:2793
+    * memory:2000
     * disks:
       * sda 40 GiB
       * sdb 40 GiB
+
+Annotations:
+-----------
+* Calico as Network: calico-rr
+* GlusterFS as Storage Solution
 
 Diagram:
 -------
 
-![alt text](https://github.com/GIT-VASS/kubernetesSpray-v1.16.6-glusterfs/blob/master/InstallationDocOnBareMetal/RHV_Vass/img/Diagram.jpg)
+![alt text](https://github.com/GIT-VASS/kubernetesSpray-v1.16.6-glusterfs/blob/master/InstallationOnVagrant/DocOnVagrant/Vagrant/img/Diagram.jpg)
 
 
 * All the hostnames must be resolved by a DNS.
@@ -51,13 +56,10 @@ Prepare the node bastion:
 
 Login in the bastion, in our case master01.k8s.labs.vass.es will be the bastion:
 ```
-ssh root@master01.k8s.labs.vass.es
+vagrant ssh masterone-k8s
+sudo su
 ```
 
-Install git:
-```
-yum install git -y
-```
 
 Clone our project from github in root directory:
 ```
@@ -65,28 +67,10 @@ cd /root
 git clone https://github.com/GIT-VASS/kubernetesSpray-v1.16.6-glusterfs.git
 ```
 
-Execute bastion.sh to install some requirements in the bastion:
-```
-kubernetesSpray-v1.16.6-glusterfs/InstallationOnBareMetal/InstallationTools/bastion.sh
-```
-
-Copy the SSH key to all the nodes:
-```
-for host in master01.k8s.labs.vass.es \
-            master02.k8s.labs.vass.es \
-            master03.k8s.labs.vass.es \
-            worker01.k8s.labs.vass.es \
-            worker02.k8s.labs.vass.es \
-            worker03.k8s.labs.vass.es;\
-            do ssh-copy-id $host; \
-            done
-```
-
 Lunch the next ansible playbook to prepare the bastion:
 ```
-cd kubernetesSpray-v1.16.6-glusterfs/InstallationOnBareMetal/ansible/
-
-ansible-playbook  -i inventories/rhvVass/bastion playbooks/preparebastion.yaml
+cd kubernetesSpray-v1.16.6-glusterfs/InstallationOnVagrant/ansible/
+ansible-playbook  -i inventories/vagrant_local/bastion playbooks/preparebastion.yaml
 ```
 
 
@@ -121,7 +105,7 @@ Create a service-account, a clusterrolebinding and clusterrolebinding:
 Check the secret that you can use to login in your dashboard:
 ```
  kubectl get secrets
- kubectl describe secret dashboard-admin-sa-token-svhm2
+ kubectl describe secret <dashboard-admin-sa-token-svhm2>
 ```
 
 Deploy GlusterFS in Kubernetes:
@@ -134,12 +118,9 @@ ansible  -i inventory/mycluster/inventory.ini all  -a "glusterfs --version"
 ```
 *Example exit: worker01.k8s.labs.vass.es | CHANGED | rc=0 >> glusterfs 7.2*
 
-Create the topology file for glusterfs:
+This installation processs create the topology file for glusterfs, if you have modified the inventory for Vagrnat check the next file:
 ```
 cd /root/glusterfs_installation/deploy/
-cp topology.json.sample topology.json
-vi topology.json
-
 cat topology.json
 {
   "clusters": [
@@ -149,10 +130,10 @@ cat topology.json
           "node": {
             "hostnames": {
               "manage": [
-                "worker01.k8s.labs.vass.es"
+                "worker-one.192.168.66.5.xip.io"
               ],
               "storage": [
-                "10.0.5.34"
+                "192.168.66.5"
               ]
             },
             "zone": 1
@@ -165,10 +146,10 @@ cat topology.json
           "node": {
             "hostnames": {
               "manage": [
-                "worker02.k8s.labs.vass.es"
+                "worker-two.192.168.66.6.xip.io"
               ],
               "storage": [
-                "10.0.5.35"
+                "192.168.66.6"
               ]
             },
             "zone": 1
@@ -181,10 +162,10 @@ cat topology.json
           "node": {
             "hostnames": {
               "manage": [
-                "worker03.k8s.labs.vass.es"
+                "worker-three.192.168.66.7.xip.io"
               ],
               "storage": [
-                "10.0.5.36"
+                "192.168.66.7"
               ]
             },
             "zone": 1
@@ -301,7 +282,7 @@ yum install wget
 curl -s https://api.github.com/repos/heketi/heketi/releases/latest   | grep browser_download_url   | grep linux.amd64   | cut -d '"' -f 4   | wget -qi -
 for i in `ls | grep heketi | grep .tar.gz`; do tar xvf $i; done
 cd heketi/
-cp ./heketi/heketi-cli /usr/local/bi
+cp heketi-cli /usr/bin
  heketi-cli --version
 heketi-cli v9.0.0
 ```
@@ -358,7 +339,7 @@ Configure StorageClass glusterfs-storage as your default StorageClass:
 
 Check the name of your storageclass:
 ```
-k get StorageClass
+kubectl get StorageClass
 NAME                PROVISIONER               AGE
 glusterfs-storage   kubernetes.io/glusterfs   10m
 ```
@@ -396,7 +377,7 @@ spec:
 
 Create the pvc in Kubernetes and check that the pvc bound a pv:
 ```
-k create -f testglusterfs.pvc
+kubectl create -f testglusterfs.yaml
 k get pvc
 ...
 ...
@@ -409,3 +390,8 @@ k get pv
 glusterfs-storage            3d22h
 pvc-a7d23a03-c3b7-45cc-adc1-9974a68982c6   1Gi        RWX            Delete           Bound    default/testglusterfs
 ```
+
+Option add k alias for kubectl:
+-----------------------------------
+vi ./.bashr
+alias k='kubectl'

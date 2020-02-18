@@ -28,25 +28,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         v.name = "master-two-k8s"
         v.memory = 2000
         v.cpus = 1
-        #
-         # Add first disk
-        #
-        unless File.exists?(".k8sStorage/master-two/sdb.vdi")
-        v.customize [
-          'createmedium', 'disk',
-          '--filename', ".k8sStorage/master-two/sdb.vdi",
-          '--format', 'VDI',
-          '--size', 20 * 1024
-        ]
-        end
-        v.customize [
-       'storageattach', :id,
-       '--storagectl', 'IDE',
-       '--port', 1,
-       '--device', 0,
-       '--type', 'hdd',
-       '--medium', ".k8sStorage/master-two/sdb.vdi"
-        ]
       end
   end
 
@@ -59,33 +40,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
           v.name = "master-three-k8s"
           v.memory = 2000
           v.cpus = 1
-          #
-           # Add first disk
-          #
-          unless File.exists?(".k8sStorage/master-three/sdb.vdi")
-          v.customize [
-            'createmedium', 'disk',
-            '--filename', ".k8sStorage/master-three/sdb.vdi",
-            '--format', 'VDI',
-            '--size', 20 * 1024
-          ]
-          end
-          v.customize [
-         'storageattach', :id,
-         '--storagectl', 'IDE',
-         '--port', 1,
-         '--device', 0,
-         '--type', 'hdd',
-         '--medium', ".k8sStorage/master-three/sdb.vdi"
-          ]
-        #
-        # Increase portcount for second disk
-        #
-        v.customize [
-          'storagectl', :id,
-          '--name', 'IDE',
-          '--portcount', 2
-        ]
       end
   end
 
@@ -106,7 +60,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         'createmedium', 'disk',
         '--filename', ".k8sStorage/worker-one/sdb.vdi",
         '--format', 'VDI',
-        '--size', 20 * 1024
+        '--size', 40 * 1024
       ]
       end
       v.customize [
@@ -133,7 +87,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         'createmedium', 'disk',
         '--filename', ".k8sStorage/worker-one/sdc.vdi",
         '--format', 'VDI',
-        '--size', 50 * 1024
+        '--size', 40 * 1024
       ]
     end
     v.customize [
@@ -165,7 +119,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             'createmedium', 'disk',
             '--filename', ".k8sStorage/worker-two/sdb.vdi",
             '--format', 'VDI',
-            '--size', 20 * 1024
+            '--size', 40 * 1024
           ]
           end
           v.customize [
@@ -192,7 +146,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             'createmedium', 'disk',
             '--filename', ".k8sStorage/worker-two/sdc.vdi",
             '--format', 'VDI',
-            '--size', 50 * 1024
+            '--size', 40 * 1024
           ]
         end
         v.customize [
@@ -225,7 +179,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
               'createmedium', 'disk',
               '--filename', ".k8sStorage/worker-three/sdb.vdi",
               '--format', 'VDI',
-              '--size', 20 * 1024
+              '--size', 40 * 1024
             ]
             end
             v.customize [
@@ -252,7 +206,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
               'createmedium', 'disk',
               '--filename', ".k8sStorage/worker-three/sdc.vdi",
               '--format', 'VDI',
-              '--size', 50 * 1024
+              '--size', 40 * 1024
             ]
           end
           v.customize [
@@ -279,25 +233,5 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         v.name = "master-one-k8s"
         v.memory = 2000
         v.cpus = 1
-      #
-       # Add first disk
-      #
-      unless File.exists?(".k8sStorage/master-one/sdb.vdi")
-      v.customize [
-        'createmedium', 'disk',
-        '--filename', ".k8sStorage/master-one/sdb.vdi",
-        '--format', 'VDI',
-        '--size', 20 * 1024
-      ]
-      end
-      v.customize [
-     'storageattach', :id,
-     '--storagectl', 'IDE',
-     '--port', 1,
-     '--device', 0,
-     '--type', 'hdd',
-     '--medium', ".k8sStorage/master-one/sdb.vdi"
-      ]
-      end
   end
 end

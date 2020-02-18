@@ -13,7 +13,7 @@ worker-three.192.168.66.7.xip.io      ansible_host=192.168.66.7      ip=192.168.
 # bastion ansible_host=x.x.x.x ansible_user=some_user
 
 [all:vars]
-yum_packages=['bash-completion','glusterfs-fuse',]
+yum_packages=['bash-completion','glusterfs-fuse','kubectl']
 
 [kube-master]
 master-one.192.168.66.2.xip.io
