@@ -13,7 +13,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       mastertwo.vm.provider "virtualbox" do |v|
         v.customize [
           'modifyvm', :id,
-          '--groups', '/masters'
+          '--groups', '/kubeSpray/masters'
         ]
         v.name = "master-two-k8s"
         v.memory = 2000
@@ -45,7 +45,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       workerone.vm.provider "virtualbox" do |v|
           v.customize [
             'modifyvm', :id,
-            '--groups', '/workers'
+            '--groups', '/kubeSpray/workers'
           ]
           v.name = "worker-one-k8s"
           v.memory = 2000
@@ -107,7 +107,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       workertwo.vm.provider "virtualbox" do |v|
           v.customize [
             'modifyvm', :id,
-            '--groups', '/workers'
+            '--groups', '/kubeSpray/workers'
           ]
           v.name = "worker-two-k8s"
           v.memory = 2000
@@ -169,6 +169,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         workerthree.vm.network "private_network", ip: "192.168.66.7"
         workerthree.vm.provision "shell", path: "./nodes/config.sh"
         workerthree.vm.provider "virtualbox" do |v|
+            v.customize [
+              'modifyvm', :id,
+              '--groups', '/kubeSpray/workers'
+            ]
             v.name = "worker-three-k8s"
             v.memory = 2000
             v.cpus = 1
@@ -229,12 +233,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       masterone.vm.network "private_network", ip: "192.168.66.2"
       masterone.vm.provision "file", source: "./password/password.txt", destination: "/tmp/password.txt"
       masterone.vm.provision "file", source: "./ansible_conf/ansible.cfg", destination: "/tmp/ansible.cfg"
-      masterone.vm.provision "file", source: "../ansible", destination: "/tmp/"
+      masterone.vm.provision "file", source: "../ansible", destination: "/tmp/ansible"
       masterone.vm.provision "shell", path: "./bastion/configbastion.sh"
       masterone.vm.provider "virtualbox" do |v|
         v.customize [
           'modifyvm', :id,
-          '--groups', '/masters'
+          '--groups', '/kubeSpray/masters'
         ]
         v.name = "master-one-k8s"
         v.memory = 2000

@@ -73,7 +73,7 @@ sudo su
 
 Launch the next ansible playbook to prepare the bastion:
 ```
-cd kubernetesSpray-v1.16.6-glusterfs/InstallationOnVagrant/ansible/
+cd /root/kubernetesSpray-v1.16.6-glusterfs/InstallationOnVagrant/ansible
 ansible-playbook  -i inventories/vagrant_local/bastion playbooks/preparebastion.yaml
 ```
 
@@ -400,7 +400,7 @@ glusterfs-storage            3d22h
 pvc-a7d23a03-c3b7-45cc-adc1-9974a68982c6   1Gi        RWX            Delete           Bound    default/testglusterfs
 ```
 
-Optional, add k as alias for kubectl:
+Optional, add "k" as alias for kubectl:
 -----------------------------------
 ```
 cd $home

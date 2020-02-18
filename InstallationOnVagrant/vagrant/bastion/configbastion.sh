@@ -12,8 +12,8 @@ mkdir -p /root/kubernetesSpray-v1.16.6-glusterfs/InstallationOnVagrant
 sudo -H pip install --upgrade pip
 sudo -H pip install --upgrade setuptools
 sudo -H pip2.7 install ansible==2.7.12
-sudo mv /tmp/ansible.cfg /root/kubernetesSpray-v1.16.6-glusterfs/InstallationOnVagrant
-mv /tmp/ansible /etc/ansible/
+sudo mv /tmp/ansible.cfg /etc/ansible/
+mv /tmp/ansible /root/kubernetesSpray-v1.16.6-glusterfs/InstallationOnVagrant
 #sudo mv /tmp/ansible /root/
 ssh-keygen -t rsa -N "" -f /root/.ssh/id_rsa
 
