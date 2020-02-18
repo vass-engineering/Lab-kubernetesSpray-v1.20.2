@@ -51,6 +51,17 @@ Diagram:
 
 * All the hostnames must be resolved by a DNS.
 
+Clone the project and create the infrastructure:
+-------------------------------------------------
+```
+git clone https://github.com/GIT-VASS/kubernetesSpray-v1.16.6-glusterfs.git
+
+cd kubernetesSpray-v1.16.6-glusterfs/InstallationOnVagrant/vagrant
+
+vagrant up
+```
+
+
 Prepare the node bastion:
 ------------------------------
 
