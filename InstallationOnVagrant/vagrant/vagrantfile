@@ -5,20 +5,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.hostmanager.manage_host = true
   config.hostmanager.ignore_private_ip = false
 
-
-
-  config.vm.define "lbone-k8sbn" do |lbone|
-      lbone.vm.box = "centos/7"
-      lbone.vm.hostname = "lb-one.192.168.66.8.xip.io"
-      lbone.vm.network "private_network", ip: "192.168.66.8"
-      lbone.vm.provision "shell", path: "./nodes/config.sh"
-      lbone.vm.provider "virtualbox" do |v|
-          v.name = "lb-one-k8s"
-          v.memory = 512
-          v.cpus = 1
-      end
-  end
-
   config.vm.define "mastertwo-k8s" do |mastertwo|
       mastertwo.vm.box = "centos/7"
       mastertwo.vm.hostname = "master-two.192.168.66.3.xip.io"
@@ -234,4 +220,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         v.memory = 2000
         v.cpus = 1
   end
+end
+
 end
