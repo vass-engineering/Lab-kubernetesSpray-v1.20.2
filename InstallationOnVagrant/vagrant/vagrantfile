@@ -29,7 +29,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       masterthree.vm.provider "virtualbox" do |v|
           v.customize [
             'modifyvm', :id,
-            '--groups', '/masters'
+            '--groups', '/kubeSpray/masters'
           ]
           v.name = "master-three-k8s"
           v.memory = 2000
