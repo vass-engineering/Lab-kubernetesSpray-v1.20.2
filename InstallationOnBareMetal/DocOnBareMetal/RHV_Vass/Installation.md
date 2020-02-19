@@ -8,7 +8,7 @@ Requirements:
     * cpu: 4
     * memory:2793
     * disks:
-      * sda 40 GiB
+      * sda 30 GiB
   * master02.k8s.labs.vass.es
     * cpu: 4
     * memory:2793
