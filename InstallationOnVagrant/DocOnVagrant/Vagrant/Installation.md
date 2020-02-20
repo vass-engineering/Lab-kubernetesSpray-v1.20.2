@@ -321,7 +321,7 @@ File: true
 
 
 
-heketi-cli topology info
+heketi-cli topology info --user admin --secret kubernetesadmin
 
 Cluster Id: b6aea255961a90ddc2c720e7466e224f
 

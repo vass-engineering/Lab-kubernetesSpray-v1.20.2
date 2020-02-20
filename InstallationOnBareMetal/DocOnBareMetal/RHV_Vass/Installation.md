@@ -144,7 +144,7 @@ ansible  -i inventory/mycluster/inventory.ini all  -a "glusterfs --version"
 ```
 *Example exit: worker01.k8s.labs.vass.es | CHANGED | rc=0 >> glusterfs 7.2*
 
-Create the topology file for glusterfs:
+Create the topology file for glusterfs, where you should add the hostnames, IPS, and disk device for Storage:
 ```
 cd /root/glusterfs_installation/deploy/
 cp topology.json.sample topology.json
@@ -162,7 +162,7 @@ cat topology.json
                 "worker01.k8s.labs.vass.es"
               ],
               "storage": [
-                "10.0.5.34"
+                "X.X.X.X"
               ]
             },
             "zone": 1
@@ -178,7 +178,7 @@ cat topology.json
                 "worker02.k8s.labs.vass.es"
               ],
               "storage": [
-                "10.0.5.35"
+                "X.X.X.X"
               ]
             },
             "zone": 1
@@ -194,7 +194,7 @@ cat topology.json
                 "worker03.k8s.labs.vass.es"
               ],
               "storage": [
-                "10.0.5.36"
+                "X.X.X.X"
               ]
             },
             "zone": 1
@@ -227,6 +227,8 @@ Deploy glusterfs:
 ```
 ./gk-deploy -g --user-key kubernetes --admin-key kubernetesadmin -l /tmp/heketi_deployment.log -v topology.json
 ...
+Do you wish to proceed with deployment?
+Yes
 ...
 ...
 ...Deployment complete!
@@ -311,7 +313,7 @@ yum install wget
 curl -s https://api.github.com/repos/heketi/heketi/releases/latest   | grep browser_download_url   | grep linux.amd64   | cut -d '"' -f 4   | wget -qi -
 for i in `ls | grep heketi | grep .tar.gz`; do tar xvf $i; done
 cd heketi/
-cp ./heketi/heketi-cli /usr/local/bi
+cp heketi-cli /usr/local/bin
  heketi-cli --version
 heketi-cli v9.0.0
 ```
@@ -327,7 +329,7 @@ Clusters:
 Id:b6aea255961a90ddc2c720e7466e224f [file][block]
 
 
-heketi-cli cluster info  b6aea255961a90ddc2c720e7466e224f
+heketi-cli cluster info  b6aea255961a90ddc2c720e7466e224f --user admin --secret kubernetesadmin
 Cluster id: b6aea255961a90ddc2c720e7466e224f
 Nodes:
 5ca1630d7f0fc21685ca44c7961c4d3d
@@ -406,7 +408,7 @@ spec:
 
 Create the pvc in Kubernetes and check that the pvc bound a pv:
 ```
-k create -f testglusterfs.pvc
+k create -f testglusterfs.yaml
 k get pvc
 ...
 ...
