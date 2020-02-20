@@ -75,6 +75,9 @@
       - 24008/tcp
       - 49152-49251/tcp
       - 8080/tcp
+      - 179/tcp
+      - 4789/udp
+      - 5473/tcp
 
 
 - name: net.ipv4.ip_forward=1
