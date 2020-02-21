@@ -3,7 +3,7 @@ Deploy Kubernetes 1.16. & CentOS7 + GlusterFs in BareMetal
 
 Requirements:
 -------------
-* 6 Virtual Machines or physical nodes.
+* 6 Virtual Machines or physical nodes. (Example)
   * master01.k8s.labs.vass.es
     * cpu: 4
     * memory:2793
@@ -68,6 +68,13 @@ Clone our project from github in root directory:
 ```
 cd /root
 git clone https://github.com/GIT-VASS/kubernetesSpray-v1.16.6-glusterfs.git
+```
+
+Configure your inventory:
+```
+cd kubernetesSpray-v1.16.6-glusterfs/InstallationOnBareMetal/ansible/inventories/rhvVass/inventoryExample.ini.j2
+cp inventoryExample.ini.j2 inventory.ini.j2
+vi  inventory.ini.j2
 ```
 
 Execute bastion.sh to install some requirements in the bastion:
