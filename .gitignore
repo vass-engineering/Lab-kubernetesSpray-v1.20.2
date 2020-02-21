@@ -1,2 +1,4 @@
 InstallationOnVagrant/vagrant/.vagrant
 InstallationOnVagrant/vagrant/.k8sStorage
+kubeconfig
+InstallationOnBareMetal/ansible/inventories/vassinventory.ini.j2
