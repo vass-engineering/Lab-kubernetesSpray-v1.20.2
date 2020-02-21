@@ -1,7 +1,18 @@
 Deploy Kubernetes 1.16. & CentOS7 + GlusterFs in Vagrant
 ==========================================================
 
-Requirements:
+Requirements
+--------------------------------
+VirtualBox 5.2.18
+
+Vagrant version: Installed Version: 2.0.4
+
+    Vagrant  plugins:
+        vagrant-hostmanager (1.8.9)
+    Vagrant box list:
+        centos/7  (virtualbox, 1905.1)
+
+Vms Deployed:
 -------------
 * 6 Virtual Machines or physical nodes.
   * master-one.192.168.66.2.xip.io
