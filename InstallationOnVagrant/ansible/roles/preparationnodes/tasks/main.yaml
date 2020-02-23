@@ -42,15 +42,24 @@
    dest: /etc/modules-load.d/dm_thin_pool.conf
    mode: 0644
 
+- name: Ensure iptables tooling does not use the nftables backend
+  shell: update-alternatives --set iptables /usr/sbin/iptables-legacy
+
 #Prepare Firewalld:
 
 - name: Starting services firewalld
   service:
     name: "{{ item }}"
-    enabled: yes
     state: started
+    enabled: yes
+    masked: no
+    daemon_reload: yes
   with_items:
       - firewalld
+
+- name: need to pause here, otherwise the firewalld service starting can sometimes cause ssh to fail
+  pause:
+    seconds: 10
 
 - name: Open up firewall ports
   firewalld:
@@ -60,9 +69,8 @@
     port: "{{ item }}"
   with_items:
       - 6443/tcp
+      - 2379-2380/tcp
       - 443/tcp
-      - 2379/tcp
-      - 2380/tcp
       - 10250/tcp
       - 10251/tcp
       - 10252/tcp
