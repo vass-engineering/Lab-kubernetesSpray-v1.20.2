@@ -320,7 +320,7 @@ yum install wget
 curl -s https://api.github.com/repos/heketi/heketi/releases/latest   | grep browser_download_url   | grep linux.amd64   | cut -d '"' -f 4   | wget -qi -
 for i in `ls | grep heketi | grep .tar.gz`; do tar xvf $i; done
 cd heketi/
-cp heketi-cli /usr/local/bin
+cp heketi-cli /usr/sbin
  heketi-cli --version
 heketi-cli v9.0.0
 ```
