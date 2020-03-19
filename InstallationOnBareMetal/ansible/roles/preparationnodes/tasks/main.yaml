@@ -42,9 +42,6 @@
    dest: /etc/modules-load.d/dm_thin_pool.conf
    mode: 0644
 
-- name: Ensure iptables tooling does not use the nftables backend
-  shell: update-alternatives --set iptables /usr/sbin/iptables-legacy
-
 #Prepare Firewalld:
 
 - name: Starting services firewalld
