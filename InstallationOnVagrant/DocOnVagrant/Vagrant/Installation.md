@@ -119,7 +119,6 @@ Create a service-account, a clusterrolebinding and clusterrolebinding:
 ```
  kubectl create serviceaccount dashboard-admin-sa
  kubectl create clusterrolebinding dashboard-admin-sa  --clusterrole=cluster-admin --serviceaccount=default:dashboard-admin-sa
- kubectl create clusterrolebinding kubernetes-dashboard --clusterrole=cluster-admin --serviceaccount=kube-system:kubernetes-dashboard
 ```
 
 Check the secret that you can use to login in your dashboard:
