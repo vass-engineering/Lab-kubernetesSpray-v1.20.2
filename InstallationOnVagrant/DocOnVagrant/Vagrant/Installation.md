@@ -52,6 +52,8 @@ Vms Deployed:
 Annotations:
 -----------
 * Calico as Network: calico-rr
+* kube_proxy_mode: 'iptables'
+  * You can change to ipvs changing all.yaml
 * GlusterFS as Storage Solution
 
 Diagram:
@@ -78,7 +80,7 @@ Prepare the node bastion:
 
 Login in the bastion, in our case master01.k8s.labs.vass.es will be the bastion:
 ```
-vagrant ssh masterone-k8s
+vagrant ssh master-one-k8s
 sudo su
 ```
 
@@ -93,6 +95,12 @@ Prepare the rest of nodes:
 --------------------------
 ```
 ansible-playbook  -i /root/kubernetes_installation/inventory/mycluster/inventory.ini playbooks/preparationnodes.yaml
+```
+
+Install jenkins in CICD node(Optional: Just if you change in all.yaml deploy_cicd_vm: 'true'):
+--------------------------
+```
+ ansible-playbook  -i /root/kubernetes_installation/inventory/mycluster/inventorycicd.ini playbooks/installcicd.yaml
 ```
 
 Start kubernetes installation:
@@ -397,7 +405,7 @@ spec:
 Create the pvc in Kubernetes and check that the pvc bound a pv:
 ```
 kubectl create -f testglusterfs.yaml
-k get pvc
+kubectl get pvc
 ...
 ...
 ...
@@ -405,7 +413,7 @@ NAME            STATUS   VOLUME                                     CAPACITY   A
 testglusterfs   Bound    pvc-a7d23a03-c3b7-45cc-adc1-9974a68982c6   1Gi        RWX            glusterfs-storage   5d1h
 
 
-k get pv
+kubectl get pv
 glusterfs-storage            3d22h
 pvc-a7d23a03-c3b7-45cc-adc1-9974a68982c6   1Gi        RWX            Delete           Bound    default/testglusterfs
 ```
@@ -414,6 +422,6 @@ Optional, add "k" as alias for kubectl:
 -----------------------------------
 ```
 cd $home
-vi ./.bashr
+vi ./.bashrc
 alias k='kubectl'
 ```
