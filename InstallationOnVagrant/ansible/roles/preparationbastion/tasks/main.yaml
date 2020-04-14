@@ -36,10 +36,22 @@
 - name: File installation prepared to install
   shell: cp -rfp /root/kubernetes_installation/inventory/sample /root/kubernetes_installation/inventory/mycluster
 
+
+- name: Delete installation directory  example
+  file:
+    path: /root/kubernetes_installation/inventory/sample
+    state: absent
+
 - name: Copy inventory files to KubeSpray Project
   template:
     src: ../../../inventories/vagrant_local/inventory.ini.j2
     dest: /root/kubernetes_installation/inventory/mycluster/inventory.ini
+
+- name: Copy inventory cicd file to KubeSpray Project
+  template:
+    src: ../../../inventories/vagrant_local/inventorycicd.ini.j2
+    dest: /root/kubernetes_installation/inventory/mycluster/inventorycicd.ini
+  when: deploy_cicd_vm== "true"
 
 - name: Copy inventory files to KubeSpray Project
   template:

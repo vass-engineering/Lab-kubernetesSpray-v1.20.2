@@ -1,0 +1,4 @@
+---
+- hosts: ci-cd
+  roles:
+    - installcicd
