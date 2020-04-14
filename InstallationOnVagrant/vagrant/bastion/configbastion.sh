@@ -23,4 +23,11 @@ sed -i 's/#PermitRootLogin yes/PermitRootLogin yes/' /etc/ssh/sshd_config
 sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
 systemctl restart sshd
 
-for host in master-one.192.168.66.2.xip.io master-two.192.168.66.3.xip.io master-three.192.168.66.4.xip.io worker-one.192.168.66.5.xip.io worker-two.192.168.66.6.xip.io worker-three.192.168.66.7.xip.io; do sshpass -f /tmp/password.txt ssh-copy-id -o "StrictHostKeyChecking no" -f $host ; done
+#for host in master-one.192.168.66.2.xip.io master-two.192.168.66.3.xip.io master-three.192.168.66.4.xip.io worker-one.192.168.66.5.xip.io worker-two.192.168.66.6.xip.io worker-three.192.168.66.7.xip.io; do sshpass -f /tmp/password.txt ssh-copy-id -o "StrictHostKeyChecking no" -f $host ; done
+
+#for host in master-one.192.168.66.2.xip.io master-two.192.168.66.3.xip.io \
+#            master-three.192.168.66.4.xip.io worker-one.192.168.66.5.xip.io \
+#            worker-two.192.168.66.6.xip.io worker-three.192.168.66.7.xip.io; \
+#            do sshpass -f /tmp/password.txt ssh-copy-id -o "StrictHostKeyChecking no" -f $host ; done
+
+for host in $1 $2 $3 $4 $5 $6 $7 ; do sshpass -f /tmp/password.txt ssh-copy-id -o "StrictHostKeyChecking no" -f $host ; done
