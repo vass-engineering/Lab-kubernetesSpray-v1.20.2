@@ -41,6 +41,8 @@ Requirements:
 Annotations:
 -----------
 * Calico as Network: calico-rr
+* kube_proxy_mode: 'iptables'
+  * You can change to ipvs changing all.yaml
 * GlusterFS as Storage Solution
 
 Diagram:
@@ -72,9 +74,9 @@ git clone https://github.com/GIT-VASS/kubernetesSpray-v1.16.6-glusterfs.git
 
 Configure your inventory:
 ```
-cd /root/kubernetesSpray-v1.16.6-glusterfs/InstallationOnBareMetal/ansible/inventories/rhvVass/
-cp inventoryExample.ini.j2 inventory.ini.j2
-vi  inventory.ini.j2
+cd /root/kubernetesSpray-v1.16.6-glusterfs/InstallationOnBareMetal/ansible/inventories/rhvVass/group_vars
+cp allExample.yaml  all.yaml
+vi  all.yaml
 ```
 
 Execute bastion.sh to install some requirements in the bastion:
