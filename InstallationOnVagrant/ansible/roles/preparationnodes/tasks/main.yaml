@@ -48,7 +48,9 @@
     path: /root/kubernetes_installation/inventory/mycluster/group_vars/k8s-cluster/k8s-cluster.yml
     regexp: '^kube_proxy_mode:'
     line: 'kube_proxy: iptables'
-  when: ansible_nodename == bastion
+  when:
+    - ansible_nodename == bastion
+    - kube_proxy == "iptables"
 
 #Prepare Firewalld:
 - name: Starting services firewalld
