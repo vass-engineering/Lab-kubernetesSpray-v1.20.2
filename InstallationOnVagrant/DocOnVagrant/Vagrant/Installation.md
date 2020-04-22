@@ -125,7 +125,7 @@ Check your cluster info where you will find the URL of yor dashboard:
 
 Create a service-account, a clusterrolebinding and clusterrolebinding:
 ```
- kubectl create serviceaccount dashboard-admin-sa
+ kubectl create serviceaccount dashboard-admin-sa -n default
  kubectl create clusterrolebinding dashboard-admin-sa  --clusterrole=cluster-admin --serviceaccount=default:dashboard-admin-sa
 ```
 
