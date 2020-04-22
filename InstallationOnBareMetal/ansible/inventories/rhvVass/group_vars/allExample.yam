@@ -1,0 +1,26 @@
+---
+#Configuration of Hostnames for  k8s
+##masters
+masterone_k8s_hostname: 'master01.k8s.labs.vass.es'
+masterone_k8s_ip: 'x.x.x.x'
+mastertwo_k8s_hostname: 'master02.k8s.labs.vass.es'
+mastertwo_k8s_ip: 'x.x.x.x'
+masterthree_k8s_hostname: 'master03.k8s.labs.vass.es'
+masterthree_k8s_ip: 'x.x.x.x'
+
+##workers
+workerone_k8s_hostname: 'infra01.k8s.labs.vass.es'
+workerone_k8s_ip: 'x.x.x.x'
+workertwo_k8s_hostname: 'infra02.k8s.labs.vass.es'
+workertwo_k8s_ip: 'x.x.x.x'
+workerthree_k8s_hostname: 'infra03.k8s.labs.vass.es'
+workerthree_k8s_ip: 'x.x.x.x'
+workerfour_k8s_hostname: 'worker01.k8s.labs.vass.es'
+workerfour_k8s_ip: 'x.x.x.x'
+workerfive_k8s_hostname: 'worker02.k8s.labs.vass.es'
+workerfive_k8s_ip: 'x.x.x.x'
+workersix_k8s_hostname: 'worker03.k8s.labs.vass.es'
+workersix_k8s_ip: 'x.x.x.x'
+
+#kube_proxy_mode: Can be ipvs, iptables
+kube_proxy: 'iptables'
