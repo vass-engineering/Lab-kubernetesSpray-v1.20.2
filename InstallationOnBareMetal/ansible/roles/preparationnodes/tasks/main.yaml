@@ -42,6 +42,15 @@
    dest: /etc/modules-load.d/dm_thin_pool.conf
    mode: 0644
 
+- name: Change kube_proxy_mode in k8s-cluster.yml with the value define in all.yaml
+  lineinfile:
+    path: /root/kubernetes_installation/inventory/mycluster/group_vars/k8s-cluster/k8s-cluster.yml
+    regexp: '^kube_proxy_mode:'
+    line: 'kube_proxy: iptables'
+  when:
+    - ansible_nodename == bastion
+    - kube_proxy == "iptables"
+    
 #Prepare Firewalld:
 
 - name: Starting services firewalld
@@ -53,10 +62,13 @@
     daemon_reload: yes
   with_items:
       - firewalld
+  when: kube_proxy == "ipvs"
+
 
 - name: need to pause here, otherwise the firewalld service starting can sometimes cause ssh to fail
   pause:
     seconds: 10
+  when: kube_proxy == "ipvs"
 
 - name: Open up firewall ports
   firewalld:
@@ -86,6 +98,7 @@
       - 5473/tcp
       - 10256/tcp
       - 9099/tcp
+  when: kube_proxy == "ipvs"
 
 - name: net.ipv4.ip_forward=1
   shell: sysctl -w net.ipv4.ip_forward=1

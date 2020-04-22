@@ -36,7 +36,17 @@
 - name: File installation prepared to install
   shell: cp -rfp /root/kubernetes_installation/inventory/sample /root/kubernetes_installation/inventory/mycluster
 
+- name: Delete installation directory  example
+  file:
+    path: /root/kubernetes_installation/inventory/sample
+    state: absent
+
 - name: Copy inventory files to KubeSpray Project
   template:
     src: ../../../inventories/rhvVass/inventory.ini.j2
     dest: /root/kubernetes_installation/inventory/mycluster/inventory.ini
+
+- name: Copy inventory files to KubeSpray Project
+  template:
+    src:  ../templates/topology.json.j2
+    dest: /root/glusterfs_installation/deploy/topology.json
