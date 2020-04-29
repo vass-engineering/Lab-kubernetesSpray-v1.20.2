@@ -50,10 +50,10 @@
   when:
     - ansible_nodename == bastion
     - kube_proxy == "iptables"
-    
+
 #Prepare Firewalld:
 
-- name: Starting services firewalld
+- name: Check services firewalld for  kube_proxy ipvs
   service:
     name: "{{ item }}"
     state: started
@@ -64,6 +64,16 @@
       - firewalld
   when: kube_proxy == "ipvs"
 
+- name: Check services firewalld for  kube_proxy iptables
+  service:
+    name: "{{ item }}"
+    state: stoped
+    enabled: no
+    masked: no
+    daemon_reload: yes
+  with_items:
+      - firewalld
+  when: kube_proxy == "iptables"
 
 - name: need to pause here, otherwise the firewalld service starting can sometimes cause ssh to fail
   pause:
