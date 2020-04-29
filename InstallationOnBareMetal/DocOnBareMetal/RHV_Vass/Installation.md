@@ -6,37 +6,52 @@ Requirements:
 * 6 Virtual Machines or physical nodes. (Example)
   * master01.k8s.labs.vass.es
     * cpu: 4
-    * memory:2793
+    * memory:3024
     * disks:
       * sda 30 GiB
   * master02.k8s.labs.vass.es
     * cpu: 4
-    * memory:2793
+    * memory:3024
     * disks:
-      * sda 40 GiB
+      * sda 30 GiB
   * master03.k8s.labs.vass.es
     * cpu: 4
-    * memory:2793
+    * memory:3024
     * disks:
-      * sda 40 GiB
+      * sda 30 GiB
   * worker01.k8s.labs.vass.es
     * cpu: 4
-    * memory:2793
+    * memory:4000
     * disks:
       * sda 40 GiB
-      * sdb 40 GiB
   * worker02.k8s.labs.vass.es
     * cpu: 4
-    * memory:2793
+    * memory:4000
     * disks:
       * sda 40 GiB
-      * sdb 40 GiB
   * worker03.k8s.labs.vass.es
     * cpu: 4
-    * memory:2793
+    * memory:4000
     * disks:
       * sda 40 GiB
-      * sdb 40 GiB
+  * infra01.k8s.labs.vass.es
+    * cpu: 4
+    * memory:4024
+    * disks:
+      * sda 30 GiB
+      * sdb 50 GiB
+  * infra02.k8s.labs.vass.es
+    * cpu: 4
+    * memory:4024
+    * disks:
+      * sda 30 GiB
+      * sdb 50 GiB
+  * infra03.k8s.labs.vass.es
+    * cpu: 4
+    * memory:4024
+    * disks:
+      * sda 30 GiB
+      * sdb 50 GiB  
 
 Annotations:
 -----------
@@ -72,11 +87,18 @@ cd /root
 git clone https://github.com/GIT-VASS/kubernetesSpray-v1.16.6-glusterfs.git
 ```
 
-Configure your inventory:
+Configure your inventory and bastion:
+
+*In our case, we are going to install 6 workers, but  the first three will be infra nodes, so we call them infra nodes, the nodes where will deploy infraestructure apps (registry, ingress...something not cover in these guide). You can deploy just 3 master and 3 workers, just remember, delete this node references from "/kubernetesSpray-v1.16.6-glusterfs/InstallationOnBareMetal/ansible/inventories/rhvVass/inventory.ini.j2" and you must remember than in the workerone_k8s_hostname, the workertwo_k8s_hostname and the workerthree_k8s_hostname the glusterFS will be deployed, you can change this parameters changing topology.json*
+
+
+Add your hostnames and IPs. In case you have not a DNS, you can use hostnames like "master-one.192.168.66.2.xip.io", check xip.io project.
+
 ```
 cd /root/kubernetesSpray-v1.16.6-glusterfs/InstallationOnBareMetal/ansible/inventories/rhvVass/group_vars
 cp allExample.yaml  all.yaml
 vi  all.yaml
+vi ../bastion
 ```
 
 Execute bastion.sh to install some requirements in the bastion:
@@ -84,14 +106,17 @@ Execute bastion.sh to install some requirements in the bastion:
 /root/kubernetesSpray-v1.16.6-glusterfs/InstallationOnBareMetal/InstallationTools/bastion.sh
 ```
 
-Copy the SSH key to all the nodes:
+Copy the SSH key to all the nodes change with your hostanames:
 ```
 for host in master01.k8s.labs.vass.es \
             master02.k8s.labs.vass.es \
             master03.k8s.labs.vass.es \
             worker01.k8s.labs.vass.es \
             worker02.k8s.labs.vass.es \
-            worker03.k8s.labs.vass.es;\
+            worker03.k8s.labs.vass.es \
+            infra01.k8s.labs.vass.es \
+            infra02.k8s.labs.vass.es \
+            infra03.k8s.labs.vass.es;\
             do ssh-copy-id $host; \
             done
 ```
@@ -153,13 +178,13 @@ ansible  -i inventory/mycluster/inventory.ini all  -a "glusterfs --version"
 ```
 *Example exit: worker01.k8s.labs.vass.es | CHANGED | rc=0 >> glusterfs 7.2*
 
-Create the topology file for glusterfs, where you should add the hostnames, IPS, and disk device for Storage:
+Create the topology file for glusterfs, where you should add the hostnames, IPS, and disk device for Storage, as it is automatically completed with the variables from the file all.yaml, just check that everything is correct. Maybe you have to change the disk (device reference), as it must not be the disk where you installed the OS, it must be a totally free disk not formated.
 ```
 cd /root/glusterfs_installation/deploy/
-cp topology.json.sample topology.json
+
 vi topology.json
 
-cat topology.json
+cat topology.json (Exmple)
 {
   "clusters": [
     {
@@ -318,7 +343,7 @@ Download heketi client:
 ```
 mkdir -p /root/heketi-client
 cd /root/heketi-client
-yum install wget
+yum install wget -y
 curl -s https://api.github.com/repos/heketi/heketi/releases/latest   | grep browser_download_url   | grep linux.amd64   | cut -d '"' -f 4   | wget -qi -
 for i in `ls | grep heketi | grep .tar.gz`; do tar xvf $i; done
 cd heketi/
