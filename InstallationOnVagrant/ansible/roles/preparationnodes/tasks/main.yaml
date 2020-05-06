@@ -7,7 +7,7 @@
   yum_repository:
     name: Gluster7.2
     description: Gluster7.2
-    baseurl: http://mirror.centos.org/centos-7/7.7.1908/storage/x86_64/gluster-7
+    baseurl: http://mirror.centos.org/centos-7/7/storage/x86_64/gluster-7
     gpgcheck: no
     enabled: yes
 
