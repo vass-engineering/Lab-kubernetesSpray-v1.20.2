@@ -8,7 +8,7 @@ VirtualBox 5.2.18
 Vagrant version: Installed Version: 2.0.4
 
     Vagrant  plugins:
-        vagrant-hostmanager (1.8.9)
+        vagrant-hostmanager (1.8.9) (vagrant plugin install vagrant-hostmanager)
     Vagrant box list:
         centos/7  (virtualbox, 1905.1)
 
@@ -69,7 +69,7 @@ Clone the project and create the infrastructure:
 ```
 git clone https://github.com/GIT-VASS/kubernetesSpray-v1.16.6-glusterfs.git
 
-cd kubernetesSpray-v1.16.6-glusterfs/InstallationOnVagrant/vagrant
+cd Lab-kubernetesSpray-v1.16.6-glusterfs/InstallationOnVagrant/vagrant
 
 vagrant up
 ```
@@ -82,6 +82,7 @@ Login in the bastion, in our case master01.k8s.labs.vass.es will be the bastion:
 ```
 vagrant ssh master-one-k8s
 sudo su
+export PATH=$PATH:/usr/local/bin/
 ```
 
 Launch the next ansible playbook to prepare the bastion:

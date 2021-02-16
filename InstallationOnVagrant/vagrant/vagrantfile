@@ -23,7 +23,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
           '--groups', '/kubeSpray/masters'
         ]
         v.name = servers["mastertwo_k8s_vmname"]
-        v.memory = 2500
+        v.memory = 4000
         v.cpus = 4
       end
   end
@@ -39,7 +39,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             '--groups', '/kubeSpray/masters'
           ]
           v.name = servers["masterthree_k8s_vmname"]
-          v.memory = 2500
+          v.memory = 4000
           v.cpus = 4
       end
   end
@@ -56,7 +56,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
           ]
           v.name = servers["workerone_k8s_vmname"]
           v.memory = 4000
-          v.cpus = 4
+          v.cpus = 5
       #
        # Add first disk
       #
@@ -117,8 +117,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             '--groups', '/kubeSpray/workers'
           ]
           v.name = servers["workertwo_k8s_vmname"]
-          v.memory = 4000
-          v.cpus = 4
+          v.memory = 3000
+          v.cpus = 5
 
           #
            # Add first disk
@@ -181,8 +181,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
               '--groups', '/kubeSpray/workers'
             ]
             v.name = servers["workerthree_k8s_vmname"]
-            v.memory = 4000
-            v.cpus = 4
+            v.memory = 3000
+            v.cpus = 5
 
             #
              # Add first disk
@@ -246,8 +246,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
               '--groups', '/kubeSpray/cicd'
             ]
             v.name = servers["cicd_k8s_vmname"]
-            v.memory = 1500
-            v.cpus = 1
+            v.memory = 800
+            v.cpus = 4
           end
       end
     end
@@ -272,7 +272,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
           '--groups', '/kubeSpray/masters'
         ]
         v.name = servers["masterone_k8s_vmname"]
-        v.memory = 2500
+        v.memory = 4000
         v.cpus = 4
   end
 end
