@@ -76,7 +76,7 @@ Guide Steps:
 3. Deploy MetalLB
 4. Deploy IngressController
 
-</ul>.
+<!-- end of the list -->
 
 1) Install K8s kubernetesSpray:
 ===============================
