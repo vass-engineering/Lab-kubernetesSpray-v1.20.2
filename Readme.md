@@ -77,8 +77,9 @@ Guide Steps:
 4) Deploy IngressController
 
 
-1) Install K8s kubernetesSpray :
-============================
+
+1) Install K8s kubernetesSpray:
+================================
 
 * Clone the project and create the infrastructure:
 -------------------------------------------------
