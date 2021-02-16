@@ -74,9 +74,8 @@ Guide Steps:
 1. Install K8s kubernetesSpray
 2. Deploy GlusterFS in Kubernetes
 3. Deploy MetalLB
-4. Deploy IngressController
+4. Deploy IngressController\n\n
 
-<!-- end of the list -->
 
 1) Install K8s kubernetesSpray:
 ===============================
@@ -149,12 +148,12 @@ alias k='kubectl'
 ```
 
 2) Deploy GlusterFS in Kubernetes:
-===============================
+=================================
 
 * Check configuration installation:
 -----------------------------------
 
-Che============================ck that all your nodes has glusterfs client installed:
+Check that all your nodes has glusterfs client installed:
 
 ```
 cd /root/kubernetes_installation
