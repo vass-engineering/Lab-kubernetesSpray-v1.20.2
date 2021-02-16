@@ -72,8 +72,11 @@ Guide Steps:
 -----------
 
 a) Install K8s kubernetesSpray
+
 b) Deploy GlusterFS in Kubernetes
+
 c) Deploy MetalLB
+
 d) Deploy IngressController
 
 
