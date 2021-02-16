@@ -7,7 +7,7 @@
   yum_repository:
     name: Gluster7.2
     description: Gluster7.2
-    baseurl: http://mirror.centos.org/centos-7/7.7.1908/storage/x86_64/gluster-7
+    baseurl: http://mirror.centos.org/centos-7/7.9.2009/storage/x86_64/gluster-7
     gpgcheck: no
     enabled: yes
 
@@ -42,6 +42,7 @@
    dest: /etc/modules-load.d/dm_thin_pool.conf
    mode: 0644
 
+
 - name: Change kube_proxy_mode in k8s-cluster.yml with the value define in all.yaml
   lineinfile:
     path: /root/kubernetes_installation/inventory/mycluster/group_vars/k8s-cluster/k8s-cluster.yml
@@ -52,8 +53,7 @@
     - kube_proxy == "iptables"
 
 #Prepare Firewalld:
-
-- name: Check services firewalld for  kube_proxy ipvs
+- name: Starting services firewalld
   service:
     name: "{{ item }}"
     state: started
@@ -64,16 +64,6 @@
       - firewalld
   when: kube_proxy == "ipvs"
 
-- name: Check services firewalld for  kube_proxy iptables
-  service:
-    name: "{{ item }}"
-    state: stoped
-    enabled: no
-    masked: no
-    daemon_reload: yes
-  with_items:
-      - firewalld
-  when: kube_proxy == "iptables"
 
 - name: need to pause here, otherwise the firewalld service starting can sometimes cause ssh to fail
   pause:
@@ -88,9 +78,8 @@
     port: "{{ item }}"
   with_items:
       - 6443/tcp
+      - 2379-2380/tcp
       - 443/tcp
-      - 2379/tcp
-      - 2380/tcp
       - 10250/tcp
       - 10251/tcp
       - 10252/tcp
@@ -106,8 +95,6 @@
       - 179/tcp
       - 4789/udp
       - 5473/tcp
-      - 10256/tcp
-      - 9099/tcp
   when: kube_proxy == "ipvs"
 
 - name: net.ipv4.ip_forward=1

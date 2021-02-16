@@ -19,7 +19,7 @@
 
 - name: DownLoad KubeSprayProject
   git:
-    repo: 'https://github.com/GIT-VASS/kubespray.git'
+    repo: 'https://github.com/vass-engineering/Lab-kubespray.git'
     dest: /root/kubernetes_installation
     version: master
     clone: yes
@@ -27,7 +27,7 @@
 
 - name: DownLoad GlusterFSProject
   git:
-    repo: 'https://github.com/GIT-VASS/gluster-kubernetes.git'
+    repo: 'https://github.com/vass-engineering/Lab-gluster-kubernetes.git'
     dest: /root/glusterfs_installation
     version: master
     clone: yes

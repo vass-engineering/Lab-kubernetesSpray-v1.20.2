@@ -9,8 +9,8 @@ yum --enablerepo=extras install epel-release -y
 yum -y  install sshpass  git
 sudo mkdir -p /etc/ansible
 mkdir -p /root/kubernetesSpray-v1.16.6-glusterfs/InstallationOnVagrant
-yum install  python3-pip
-yum install python36-setuptools
+yum install  -y  python3-pip
+yum install -y  python36-setuptools
 pip3 install --upgrade pip
 pip3 install ansible==2.9.16
 sudo mv /tmp/ansible.cfg /etc/ansible/
