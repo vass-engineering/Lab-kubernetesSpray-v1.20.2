@@ -69,7 +69,7 @@ Diagram:
 
 Plus CICD jenkins VMs:
 -----------------------
-As this is Lab for Learning and testing, it allow you to deploy a VMs with Jenkins installed. If you want to deploy the Vm with Jenkins, just change the value (deploy_cicd_vm: 'false') to true in the  file  "ansible/inventories/vagrant_local/group_vars/all.yaml" 
+As this is a Lab for learning and testing, it allows you to deploy a VMs with Jenkins installed. If you want to deploy the Vm with Jenkins, just change the value (deploy_cicd_vm: 'false') to true in the  file  "ansible/inventories/vagrant_local/group_vars/all.yaml" and lunch the ansible playbooks/installcicd.yaml during the installation guide. 
 
 
 Guide Steps:
