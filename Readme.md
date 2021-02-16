@@ -67,6 +67,10 @@ Diagram:
 
 * All the hostnames must be resolved by a DNS or set hostnames in the /etc/hosts of all the VMs. We will use xip.io as the hostname which will works as a DNS.
 
+Plus CICD jenkins VMs:
+-----------------------
+As this is Lab for Learning and testing, it allow you to deploy a VMs with Jenkins installed. If you want to deploy the Vm with Jenkins, just change the value (deploy_cicd_vm: 'false') to true in the  file  "ansible/inventories/vagrant_local/group_vars/all.yaml" 
+
 
 Guide Steps:
 -----------
