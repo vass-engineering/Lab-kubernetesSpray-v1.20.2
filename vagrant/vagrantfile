@@ -55,8 +55,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             '--groups', '/kubeSpray/workers'
           ]
           v.name = servers["workerone_k8s_vmname"]
-          v.memory = 4000
-          v.cpus = 5
+          v.memory = 3000
+          v.cpus = 4
       #
        # Add first disk
       #
@@ -118,7 +118,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
           ]
           v.name = servers["workertwo_k8s_vmname"]
           v.memory = 3000
-          v.cpus = 5
+          v.cpus = 4
 
           #
            # Add first disk
@@ -182,7 +182,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             ]
             v.name = servers["workerthree_k8s_vmname"]
             v.memory = 3000
-            v.cpus = 5
+            v.cpus = 4
 
             #
              # Add first disk
@@ -246,7 +246,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
               '--groups', '/kubeSpray/cicd'
             ]
             v.name = servers["cicd_k8s_vmname"]
-            v.memory = 800
+            v.memory = 1000
             v.cpus = 4
           end
       end
@@ -260,6 +260,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       masterone.vm.provision "file", source: "./password/password.txt", destination: "/tmp/password.txt"
       masterone.vm.provision "file", source: "./ansible_conf/ansible.cfg", destination: "/tmp/ansible.cfg"
       masterone.vm.provision "file", source: "../ansible", destination: "/tmp/ansible"
+      masterone.vm.provision "file", source: "../MetalLB", destination: "/tmp/MetalLB"
       if servers["deploy_cicd_vm"] == "false"
         masterone.vm.provision "shell", path: "./bastion/configbastion.sh", args: [servers["masterone_k8s_hostname"], servers["mastertwo_k8s_hostname"], servers["masterthree_k8s_hostname"], servers["workerone_k8s_hostname"], servers["workertwo_k8s_hostname"], servers["workerthree_k8s_hostname"]]
       end
