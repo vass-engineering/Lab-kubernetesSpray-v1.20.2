@@ -488,10 +488,10 @@ cd /root/kubernetesSpray-v1.16.6-glusterfs/MetalLB
 k create -f configlbVagrant.yaml
 ```
 
-d) Deploy IngressController: https://metallb.universe.tf/installation/
+d) Deploy IngressController:
 =========================
 
-Doc: https://metallb.universe.tf/installation/
+Doc: https://docs.nginx.com/nginx-ingress-controller/installation/installation-with-helm/
 
 
 * Install helm3:
