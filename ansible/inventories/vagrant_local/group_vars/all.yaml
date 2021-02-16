@@ -26,7 +26,7 @@ workerthree_k8s_vmname: 'worker-three-k8s'
 cicd_k8s_vmname: 'cicd-k8s'
 cicd_k8s_hostname: 'cicd.192.168.66.8.xip.io'
 cicd_k8s_ip: '192.168.66.8'
-deploy_cicd_vm: 'true'
+deploy_cicd_vm: 'false'
 
 
 #kube_proxy_mode: Can be ipvs, iptables
