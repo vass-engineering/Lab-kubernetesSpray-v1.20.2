@@ -64,12 +64,20 @@ Diagram:
 
 ![alt text](https://github.com/vass-engineering/Lab-kubernetesSpray-v1.20.2/blob/develop/img/Diagram.jpg)
 
-https://github.com/vass-engineering/Lab-kubernetesSpray-v1.20.2.git
 
 * All the hostnames must be resolved by a DNS or set hostnames in the /etc/hosts of all the VMs. We will use xip.io as the hostname which will works as a DNS.
 
 
-Install K8s kubernetesSpray :
+Guide Steps:
+-----------
+
+1) Install K8s kubernetesSpray
+2) Deploy GlusterFS in Kubernetes
+3) Deploy MetalLB
+4) Deploy IngressController
+
+
+1) Install K8s kubernetesSpray :
 ============================
 
 * Clone the project and create the infrastructure:
@@ -110,8 +118,9 @@ ansible-playbook  -i inventories/vagrant_local/bastion playbooks/preparebastion.
 ansible-playbook  -i /root/kubernetes_installation/inventory/mycluster/inventory.ini playbooks/preparationnodes.yaml
 ```
 
-Install jenkins in CICD node(Optional: Just if you change in all.yaml deploy_cicd_vm: 'true'):
---------------------------
+Install jenkins in CICD node (Optional: Just if you change in all.yaml deploy_cicd_vm: 'true'):
+-----------------------------------------------------------------------------------------------
+
 ```
  ansible-playbook  -i /root/kubernetes_installation/inventory/mycluster/inventorycicd.ini playbooks/installcicd.yaml
 ```
@@ -138,13 +147,13 @@ vi ./.bashrc
 alias k='kubectl'
 ```
 
-Deploy GlusterFS in Kubernetes:
+2) Deploy GlusterFS in Kubernetes:
 ===============================
 
 * Check configuration installation:
 -----------------------------------
 
-Check that all your nodes has glusterfs client installed:
+Che============================ck that all your nodes has glusterfs client installed:
 
 ```
 cd /root/kubernetes_installation
@@ -433,13 +442,10 @@ glusterfs-storage            3d22h
 pvc-a7d23a03-c3b7-45cc-adc1-9974a68982c6   1Gi        RWX            Delete           Bound    default/testglusterfs
 ```
 
+3) Deploy MetalLB:
+===============
 
-
-
-
-
-Deploy MetalLB: (https://metallb.universe.tf/installation/)
-===========================================================
+Doc: https://metallb.universe.tf/installation/
 
 * Configure K8s for MetalLB:
 ----------------------------
@@ -478,8 +484,11 @@ cd /root/kubernetesSpray-v1.16.6-glusterfs/MetalLB
 k create -f configlbVagrant.yaml
 ```
 
-Deploy IngressController: (https://metallb.universe.tf/installation/)
-===========================================================
+4) Deploy IngressController: https://metallb.universe.tf/installation/
+=========================
+
+Doc: https://metallb.universe.tf/installation/
+
 
 * Install helm3:
 ----------------
