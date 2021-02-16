@@ -4,7 +4,8 @@ Deploy Kubernetes 1.20. & CentOS7 + GlusterFs + MetalLB + Nginx ingress controll
 
 Description
 --------------------------------
-This project describe how to deploy Kubernetes using kubernetesSpray project + Gluster FS + MetalLB + Nginx ingress controller in Vagrant
+This project describe how to deploy Kubernetes using kubernetesSpray project + Gluster FS + MetalLB + Nginx ingress controller in Vagrant.
+The purpose of this project is to deploy an infrastructure to learn and test in a environment similar to production.
 We have create two forks, one for kubernetesSpray project and another one for GlusterFS, where we have fixed  some issues detected, we used  both forks to deploy kubernetes.
 
 Requirements
@@ -21,55 +22,73 @@ Vms Deployed:
 -------------
 * 6 Virtual Machines or physical nodes.
   * master-one.192.168.66.2.xip.io
+    * role
+      * ControlPlane
     * cpu: 4
-    * memory:2000
+    * memory:4000
     * disks:
       * sda 40 GiB
   * master-two.192.168.66.3.xip.io
+    * role
+      * ControlPlane
     * cpu: 4
-    * memory:2000
+    * memory:4000
     * disks:
       * sda 40 GiB
   * master-three.192.168.66.4.xip.io
+    * role
+      * ControlPlane
     * cpu: 4
-    * memory:2000
+    * memory:4000
     * disks:
       * sda 40 GiB
   * worker-one.192.168.66.5.xip.io
+    * role
+      * Compute node
+      * GlusterFS
     * cpu: 4
-    * memory:2000
+    * memory:3000
     * disks:
       * sda 40 GiB
       * sdb 40 GiB
   * worker-two.192.168.66.6.xip.io
+    * role
+      * Compute node
+      * GlusterFS
     * cpu: 4
-    * memory:2000
+    * memory:3000
     * disks:
       * sda 40 GiB
       * sdb 40 GiB
   * worker-three.192.168.66.7.xip.io
+    * role
+      * Compute node
+      * GlusterFS
     * cpu: 4
-    * memory:2000
+    * memory:3000
     * disks:
       * sda 40 GiB
       * sdb 40 GiB
+  * cicd.192.168.66.8.xip.io (Optional not deployed by default)
+    * role
+      * Cicd Jenkins
+    * cpu: 4
+    * memory:1000
+    * disks:
+      * sda 40 GiB
 
 Annotations:
 -----------
 * Calico as Network: calico-rr
 * GlusterFS as Storage Solution
 
-Diagram:
--------
-
-![alt text](https://github.com/vass-engineering/Lab-kubernetesSpray-v1.20.2/blob/develop/img/Diagram.jpg)
-
+Note:
 
 * All the hostnames must be resolved by a DNS or set hostnames in the /etc/hosts of all the VMs. We will use xip.io as the hostname which will works as a DNS.
 
 Plus CICD jenkins VMs:
 -----------------------
-As this is a Lab for learning and testing, it allows you to deploy a VMs with Jenkins installed. If you want to deploy the Vm with Jenkins, just change the value (deploy_cicd_vm: 'false') to true in the  file  "ansible/inventories/vagrant_local/group_vars/all.yaml" and lunch the ansible playbooks/installcicd.yaml during the installation guide. 
+As this is a Lab for learning and testing, it allows you to deploy a VMs with Jenkins installed. If you want to deploy the Vm with Jenkins, just change the value (deploy_cicd_vm: 'false') to true in the  file  "ansible/inventories/vagrant_local/group_vars/all.yaml" and lunch the ansible playbooks/installcicd.yaml during the installation guide.
 
 
 Guide Steps:
@@ -94,7 +113,7 @@ a) Install K8s kubernetesSpray:
 ```
 git clone https://github.com/vass-engineering/Lab-kubernetesSpray-v1.20.2.git
 
-cd Lab-kubernetesSpray-v1.16.6-glusterfs/InstallationOnVagrant/vagrant
+cd Lab-kubernetesSpray-v1.20.2/vagrant/
 
 vagrant up
 ```
@@ -114,7 +133,7 @@ export PATH=$PATH:/usr/local/bin/
 Launch the next ansible playbook to prepare the bastion:
 
 ```
-cd /root/kubernetesSpray-v1.16.6-glusterfs/InstallationOnVagrant/ansible
+cd /root/kubernetesSpray-v1.20.2-glusterfs/InstallationOnVagrant/ansible
 ansible-playbook  -i inventories/vagrant_local/bastion playbooks/preparebastion.yaml
 ```
 
@@ -144,7 +163,21 @@ ansible-playbook -i inventory/mycluster/inventory.ini  cluster.yml
 
 Details of the successfully installation:
 
-![alt text](https://github.com/GIT-VASS/kubernetesSpray-v1.16.6-glusterfs/blob/master/InstallationOnVagrant/DocOnVagrant/Vagrant/img/InstallationAnsible.jpg)
+![alt text](https://github.com/vass-engineering/Lab-kubernetesSpray-v1.20.2/blob/master/img/InstallationAnsible.jpg)
+
+* Check nodes status:
+---------------------
+
+```
+[root@master-one deploy]# kubectl get nodes
+NAME                               STATUS   ROLES                  AGE     VERSION
+master-one.192.168.66.2.xip.io     Ready    control-plane,master   9m41s   v1.20.2
+master-three.192.168.66.4.xip.io   Ready    control-plane,master   8m56s   v1.20.2
+master-two.192.168.66.3.xip.io     Ready    control-plane,master   9m8s    v1.20.2
+worker-one.192.168.66.5.xip.io     Ready    <none>                 7m56s   v1.20.2
+worker-three.192.168.66.7.xip.io   Ready    <none>                 7m54s   v1.20.2
+worker-two.192.168.66.6.xip.io     Ready    <none>                 7m54s   v1.20.2
+```
 
 
 * Optional, add "k" as alias for kubectl:
@@ -167,7 +200,7 @@ Check that all your nodes has glusterfs client installed:
 cd /root/kubernetes_installation
 ansible  -i inventory/mycluster/inventory.ini all  -a "glusterfs --version"
 ```
-*Example exit: worker01.k8s.labs.vass.es | CHANGED | rc=0 >> glusterfs 7.2*
+*Example exit: worker01.k8s.labs.vass.es | CHANGED | rc=0 >> glusterfs 7.9*
 
 This installation processs create the topology file for glusterfs, if you have modified the inventory for Vagrant check the next file:
 
@@ -235,6 +268,18 @@ cat topology.json
 * Deploy glusterfs:
 -------------------
 
+Create a namespace for GlusterFs
+
+```
+kubectl create namespace glusterfs
+```
+
+Set the context for this namespaces
+```
+kubectl config set-context --current --namespace glusterfs
+```
+
+
 ***Before to deploy decide the user-key variable and the admin-key variable***
 
 *user-key: Secret string for general heketi users. heketi users have access to only Volume APIs. Used in dynamic provisioning. This is a required argument.*
@@ -251,10 +296,19 @@ cat topology.json
 ```
 ./gk-deploy -g --user-key kubernetes --admin-key kubernetesadmin -l /tmp/heketi_deployment.log -v topology.json
 ...
+Do you wish to proceed with deployment?
+
+[Y]es, [N]o? [Default: Y]: Y
 ...
 ...
 ...Deployment complete!
 ```
+
+Check the pods for GlusterFs:
+
+```
+```
+
 
 Check HEKETI status:
 
@@ -339,8 +393,8 @@ curl -s https://api.github.com/repos/heketi/heketi/releases/latest   | grep brow
 for i in `ls | grep heketi | grep .tar.gz`; do tar xvf $i; done
 cd heketi/
 cp heketi-cli /usr/sbin
- heketi-cli --version
-heketi-cli v10.2.0
+heketi-cli --version
+  heketi-cli v10.2.0
 ```
 
 Now you can communicate with your glsuter:
@@ -417,9 +471,10 @@ storageclass.storage.k8s.io/glusterfs-storage patched
 * Test your glusterfs Creating a pvc:
 -----------------------------------
 
-Create the pvc file yaml (testglusterfs.yaml):
+Create the pvc:
 
 ```
+cat << EOF | kubectl apply -f -
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
@@ -431,12 +486,12 @@ spec:
     requests:
       storage: 250Mi
   storageClassName: glusterfs-storage
+EOF
 ```
 
-Create the pvc in Kubernetes and check that the pvc bound a pv:
+Check that the pvc bound a pv:
 
 ```
-kubectl create -f testglusterfs.yaml
 kubectl get pvc
 ...
 ...
@@ -453,7 +508,7 @@ pvc-a7d23a03-c3b7-45cc-adc1-9974a68982c6   1Gi        RWX            Delete     
 c) Deploy MetalLB:
 ===============
 
-Doc: https://metallb.universe.tf/installation/
+Source of information: https://metallb.universe.tf/installation/
 
 * Configure K8s for MetalLB:
 ----------------------------
@@ -488,24 +543,26 @@ kubectl create secret generic -n metallb-system memberlist --from-literal=secret
 MetalLB remains idle until configured. This is accomplished by creating and deploying a configmap into the same namespace (metallb-system) as the deployment.
 
 ```
-cd /root/kubernetesSpray-v1.16.6-glusterfs/MetalLB
-k create -f configlbVagrant.yaml
+cd /tmp/MetalLB/
+kubectl  create -f configlbVagrant.yaml
 ```
 
 d) Deploy IngressController:
 =========================
 
-Doc: https://docs.nginx.com/nginx-ingress-controller/installation/installation-with-helm/
+Source of information: https://docs.nginx.com/nginx-ingress-controller/installation/installation-with-helm/
 
 
 * Install helm3:
 ----------------
 
 ```
+mkdir /tmp/helm3 && cd /tmp/helm3
 wget https://get.helm.sh/helm-v3.5.2-linux-amd64.tar.gz
 tar -xvf helm-v3.5.2-linux-amd64.tar.gz
-mv linux-amd64/helm /usr/local/bin/helm
+mv linux-amd64/helm /usr/sbin/helm
 helm version
+  version.BuildInfo{Version:"v3.5.2", GitCommit:"167aac70832d3a384f65f9745335e9fb40169dc2", GitTreeState:"dirty", GoVersion:"go1.15.7"}
 ```
 
 * Add helm nginx-stable repository:
@@ -514,7 +571,21 @@ helm version
 ```
 helm repo add nginx-stable https://helm.nginx.com/stable
 helm repo update
+
+kubectl create ns ingresscontroller
+kubectl config set-context --current --namespace ingresscontroller
+
 helm install my-release nginx-stable/nginx-ingress
+
+NAME: my-release
+LAST DEPLOYED: Tue Feb 16 23:21:30 2021
+NAMESPACE: ingresscontroller
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+NOTES:
+The NGINX Ingress Controller has been installed.
+
 ```
 
 * Example Ingress:
