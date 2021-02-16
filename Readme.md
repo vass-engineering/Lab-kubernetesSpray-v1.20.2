@@ -62,8 +62,9 @@ Annotations:
 Diagram:
 -------
 
-![alt text](https://github.com/GIT-VASS/kubernetesSpray-v1.16.6-glusterfs/blob/master/InstallationOnVagrant/DocOnVagrant/Vagrant/img/Diagram.jpg)
+![alt text](https://github.com/vass-engineering/Lab-kubernetesSpray-v1.20.2/blob/develop/img/Diagram.jpg)
 
+https://github.com/vass-engineering/Lab-kubernetesSpray-v1.20.2.git
 
 * All the hostnames must be resolved by a DNS or set hostnames in the /etc/hosts of all the VMs. We will use xip.io as the hostname which will works as a DNS.
 
