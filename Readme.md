@@ -94,13 +94,13 @@ As this is a Lab for learning and testing, it allows you to deploy a VMs with Je
 Guide Steps:
 -----------
 
-a) Install K8s kubernetesSpray
+a) Install K8s kubernetesSpray (Time 30min)
 
-b) Deploy GlusterFS in Kubernetes
+b) Deploy GlusterFS in Kubernetes (Time 10min)
 
-c) Deploy MetalLB
+c) Deploy MetalLB (Time 2min)
 
-d) Deploy IngressController
+d) Deploy IngressController (Time 2min)
 
 
 
@@ -122,7 +122,7 @@ vagrant up
 * Prepare the node bastion:
 ------------------------------
 
-Login in the bastion, in our case master01.k8s.labs.vass.es will be the bastion:
+Login in the bastion, in our case master-one.192.168.66.2.xip.io will be the bastion:
 
 ```
 vagrant ssh master-one-k8s
@@ -307,6 +307,14 @@ Do you wish to proceed with deployment?
 Check the pods for GlusterFs:
 
 ```
+kubectl get pods
+
+NAME                      READY   STATUS    RESTARTS   AGE
+glusterfs-8qcl8           1/1     Running   0          3m18s
+glusterfs-9727c           1/1     Running   0          3m18s
+glusterfs-mmrlm           1/1     Running   0          3m18s
+heketi-55c58cf9bf-4xq7k   1/1     Running   0          20s
+
 ```
 
 
