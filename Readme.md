@@ -596,6 +596,19 @@ The NGINX Ingress Controller has been installed.
 
 ```
 
+* Check the IP for External-IP:
+----------------------------------
+MetalLB will gives an IP of the range defined during the installation. This will be the IP that you can use for the  Ingress objects.
+
+```
+kubectl get svc
+NAME                       TYPE           CLUSTER-IP      EXTERNAL-IP     PORT(S)                      AGE
+my-release-nginx-ingress   LoadBalancer   10.233.37.103   192.168.66.80   80:30265/TCP,443:30233/TCP   7m50s
+```
+
+EXTERNAL-IP > 192.168.66.80
+
+
 * Example Ingress:
 ----------------------------------
 
