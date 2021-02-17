@@ -102,6 +102,8 @@ c) Deploy MetalLB (Time 2min)
 
 d) Deploy IngressController (Time 2min)
 
+e) Install jenkins in CICD node (Time 10min)
+
 
 
 a) Install K8s kubernetesSpray:
@@ -145,12 +147,6 @@ ansible-playbook  -i inventories/vagrant_local/bastion playbooks/preparebastion.
 ansible-playbook  -i /root/kubernetes_installation/inventory/mycluster/inventory.ini playbooks/preparationnodes.yaml
 ```
 
-Install jenkins in CICD node (Optional: Just if you change in all.yaml deploy_cicd_vm: 'true'):
------------------------------------------------------------------------------------------------
-
-```
- ansible-playbook  -i /root/kubernetes_installation/inventory/mycluster/inventorycicd.ini playbooks/installcicd.yaml
-```
 
 * Start kubernetes installation:
 ------------------------------
@@ -187,6 +183,7 @@ cd $home
 vi ./.bashrc
 alias k='kubectl'
 ```
+
 
 b) Deploy GlusterFS in Kubernetes:
 =================================
@@ -632,4 +629,18 @@ spec:
             name: minio-1613499518
             port:
               number: 9000
+```
+
+
+e) Install jenkins in CICD node:
+===============================
+
+Optional: Just if you change in the file ansible/inventories/vagrant_local/group_vars/all.yaml the value of  "deploy_cicd_vm: 'true')":
+It will deploy jenkins in the VM "cicd.192.168.66.8.xip.io".
+
+```
+vagrant ssh master-one-k8s
+sudo su
+export PATH=$PATH:/usr/local/bin/
+ ansible-playbook  -i /root/kubernetes_installation/inventory/mycluster/inventorycicd.ini playbooks/installcicd.yaml
 ```
