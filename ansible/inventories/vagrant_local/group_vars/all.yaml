@@ -1,0 +1,33 @@
+---
+#Configuration of Hostnames for  k8s
+##masters
+masterone_k8s_hostname: 'master-one.192.168.66.2.xip.io'
+masterone_k8s_ip: '192.168.66.2'
+masterone_k8s_vmname: 'master-one-k8s'
+mastertwo_k8s_hostname: 'master-two.192.168.66.3.xip.io'
+mastertwo_k8s_ip: '192.168.66.3'
+mastertwo_k8s_vmname: 'master-two-k8s'
+masterthree_k8s_hostname: 'master-three.192.168.66.4.xip.io'
+masterthree_k8s_ip: '192.168.66.4'
+masterthree_k8s_vmname: 'master-three-k8s'
+
+##workers
+workerone_k8s_hostname: 'worker-one.192.168.66.5.xip.io'
+workerone_k8s_ip: '192.168.66.5'
+workerone_k8s_vmname: 'worker-one-k8s'
+workertwo_k8s_hostname: 'worker-two.192.168.66.6.xip.io'
+workertwo_k8s_ip: '192.168.66.6'
+workertwo_k8s_vmname: 'worker-two-k8s'
+workerthree_k8s_hostname: 'worker-three.192.168.66.7.xip.io'
+workerthree_k8s_ip: '192.168.66.7'
+workerthree_k8s_vmname: 'worker-three-k8s'
+
+#CICD
+cicd_k8s_vmname: 'cicd-k8s'
+cicd_k8s_hostname: 'cicd.192.168.66.8.xip.io'
+cicd_k8s_ip: '192.168.66.8'
+deploy_cicd_vm: 'false'
+
+
+#kube_proxy_mode: Can be ipvs, iptables
+kube_proxy: 'iptables'

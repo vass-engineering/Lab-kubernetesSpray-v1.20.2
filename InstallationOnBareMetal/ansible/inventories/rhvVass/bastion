@@ -1,8 +1,0 @@
-[role_bastion]
-#add your bastion hostname 
-master01.k8s.labs.vass.es
-
-[role_bastion:vars]
-ansible_user=root
-
-yum_packages_bastion=['bash-completion','libselinux-python','epel-release','pyOpenSSL','python-pip','sshpass','python-gssapi','python-crypto.x86_64']

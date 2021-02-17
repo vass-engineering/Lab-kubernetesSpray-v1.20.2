@@ -1,4 +1,3 @@
-InstallationOnVagrant/vagrant/.vagrant
-InstallationOnVagrant/vagrant/.k8sStorage
+vagrant/.vagrant
+vagrant/.k8sStorage
 kubeconfig
-InstallationOnBareMetal/ansible/inventories/rhvVass/group_vars/all.yaml

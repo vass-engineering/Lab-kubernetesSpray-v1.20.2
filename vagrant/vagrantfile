@@ -1,0 +1,281 @@
+VAGRANTFILE_API_VERSION = "2"
+
+# Require YAML module
+require 'yaml'
+# Read YAML file with box details
+servers = YAML.load_file('../ansible/inventories/vagrant_local/group_vars/all.yaml')
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.hostmanager.enabled = true
+  config.hostmanager.manage_host = true
+  config.hostmanager.ignore_private_ip = false
+  config.vm.synced_folder '.', '/vagrant', disabled: true
+
+
+  config.vm.define servers["mastertwo_k8s_vmname"] do |mastertwo|
+      mastertwo.vm.box = "centos/7"
+      mastertwo.vm.hostname = servers["mastertwo_k8s-hostname"]
+      mastertwo.vm.network "private_network", ip: servers["mastertwo_k8s_ip"]
+      mastertwo.vm.provision "shell", path: "./nodes/config.sh"
+      mastertwo.vm.provider "virtualbox" do |v|
+        v.customize [
+          'modifyvm', :id,
+          '--groups', '/kubeSpray/masters'
+        ]
+        v.name = servers["mastertwo_k8s_vmname"]
+        v.memory = 4000
+        v.cpus = 4
+      end
+  end
+
+  config.vm.define servers["masterthree_k8s_vmname"]  do |masterthree|
+      masterthree.vm.box = "centos/7"
+      masterthree.vm.hostname = servers["masterthree_k8s_hostname"]
+      masterthree.vm.network "private_network", ip: servers["masterthree_k8s_ip"]
+      masterthree.vm.provision "shell", path: "./nodes/config.sh"
+      masterthree.vm.provider "virtualbox" do |v|
+          v.customize [
+            'modifyvm', :id,
+            '--groups', '/kubeSpray/masters'
+          ]
+          v.name = servers["masterthree_k8s_vmname"]
+          v.memory = 4000
+          v.cpus = 4
+      end
+  end
+
+  config.vm.define servers["workerone_k8s_vmname"] do |workerone|
+      workerone.vm.box = "centos/7"
+      workerone.vm.hostname = servers["workerone_k8s_hostname"]
+      workerone.vm.network "private_network", ip: servers["workerone_k8s_ip"]
+      workerone.vm.provision "shell", path: "./nodes/config.sh"
+      workerone.vm.provider "virtualbox" do |v|
+          v.customize [
+            'modifyvm', :id,
+            '--groups', '/kubeSpray/workers'
+          ]
+          v.name = servers["workerone_k8s_vmname"]
+          v.memory = 3000
+          v.cpus = 4
+      #
+       # Add first disk
+      #
+      unless File.exists?(".k8sStorage/worker-one/sdb.vdi")
+      v.customize [
+        'createmedium', 'disk',
+        '--filename', ".k8sStorage/worker-one/sdb.vdi",
+        '--format', 'VDI',
+        '--size', 40 * 1024
+      ]
+      end
+      v.customize [
+     'storageattach', :id,
+     '--storagectl', 'IDE',
+     '--port', 1,
+     '--device', 0,
+     '--type', 'hdd',
+     '--medium', ".k8sStorage/worker-one/sdb.vdi"
+      ]
+    #
+    # Increase portcount for second disk
+    #
+    v.customize [
+      'storagectl', :id,
+      '--name', 'IDE',
+      '--portcount', 2
+    ]
+    #
+    # Add second disk
+    #
+    unless File.exists?(".k8sStorage/worker-one/sdc.vdi")
+      v.customize [
+        'createmedium', 'disk',
+        '--filename', ".k8sStorage/worker-one/sdc.vdi",
+        '--format', 'VDI',
+        '--size', 40 * 1024
+      ]
+    end
+    v.customize [
+          'storageattach', :id,
+          '--storagectl', 'IDE',
+          '--port', 1,
+          '--device', 1,
+          '--type', 'hdd',
+          '--medium', ".k8sStorage/worker-one/sdc.vdi"
+        ]
+      end
+  end
+
+  config.vm.define servers["workertwo_k8s_vmname"] do |workertwo|
+      workertwo.vm.box = "centos/7"
+      workertwo.vm.hostname = servers["workertwo_k8s_hostname"]
+      workertwo.vm.network "private_network", ip: servers ["workertwo_k8s_ip"]
+      workertwo.vm.provision "shell", path: "./nodes/config.sh"
+      workertwo.vm.provider "virtualbox" do |v|
+          v.customize [
+            'modifyvm', :id,
+            '--groups', '/kubeSpray/workers'
+          ]
+          v.name = servers["workertwo_k8s_vmname"]
+          v.memory = 3000
+          v.cpus = 4
+
+          #
+           # Add first disk
+          #
+          unless File.exists?(".k8sStorage/worker-two/sdb.vdi")
+          v.customize [
+            'createmedium', 'disk',
+            '--filename', ".k8sStorage/worker-two/sdb.vdi",
+            '--format', 'VDI',
+            '--size', 40 * 1024
+          ]
+          end
+          v.customize [
+         'storageattach', :id,
+         '--storagectl', 'IDE',
+         '--port', 1,
+         '--device', 0,
+         '--type', 'hdd',
+         '--medium', ".k8sStorage/worker-two/sdb.vdi"
+          ]
+        #
+        # Increase portcount for second disk
+        #
+        v.customize [
+          'storagectl', :id,
+          '--name', 'IDE',
+          '--portcount', 2
+        ]
+        #
+        # Add second disk
+        #
+        unless File.exists?(".k8sStorage/worker-two/sdc.vdi")
+          v.customize [
+            'createmedium', 'disk',
+            '--filename', ".k8sStorage/worker-two/sdc.vdi",
+            '--format', 'VDI',
+            '--size', 40 * 1024
+          ]
+        end
+        v.customize [
+              'storageattach', :id,
+              '--storagectl', 'IDE',
+              '--port', 1,
+              '--device', 1,
+              '--type', 'hdd',
+              '--medium', ".k8sStorage/worker-two/sdc.vdi"
+            ]
+          end
+  end
+
+
+    config.vm.define servers["workerthree_k8s_vmname"] do |workerthree|
+        workerthree.vm.box = "centos/7"
+        workerthree.vm.hostname = servers["workerthree_k8s_hostname"]
+        workerthree.vm.network "private_network", ip: "192.168.66.7"
+        workerthree.vm.provision "shell", path: "./nodes/config.sh"
+        workerthree.vm.provider "virtualbox" do |v|
+            v.customize [
+              'modifyvm', :id,
+              '--groups', '/kubeSpray/workers'
+            ]
+            v.name = servers["workerthree_k8s_vmname"]
+            v.memory = 3000
+            v.cpus = 4
+
+            #
+             # Add first disk
+            #
+            unless File.exists?(".k8sStorage/worker-three/sdb.vdi")
+            v.customize [
+              'createmedium', 'disk',
+              '--filename', ".k8sStorage/worker-three/sdb.vdi",
+              '--format', 'VDI',
+              '--size', 40 * 1024
+            ]
+            end
+            v.customize [
+           'storageattach', :id,
+           '--storagectl', 'IDE',
+           '--port', 1,
+           '--device', 0,
+           '--type', 'hdd',
+           '--medium', ".k8sStorage/worker-three/sdb.vdi"
+            ]
+          #
+          # Increase portcount for second disk
+          #
+          v.customize [
+            'storagectl', :id,
+            '--name', 'IDE',
+            '--portcount', 2
+          ]
+          #
+          # Add second disk
+          #
+          unless File.exists?(".k8sStorage/worker-three/sdc.vdi")
+            v.customize [
+              'createmedium', 'disk',
+              '--filename', ".k8sStorage/worker-three/sdc.vdi",
+              '--format', 'VDI',
+              '--size', 40 * 1024
+            ]
+          end
+          v.customize [
+                'storageattach', :id,
+                '--storagectl', 'IDE',
+                '--port', 1,
+                '--device', 1,
+                '--type', 'hdd',
+                '--medium', ".k8sStorage/worker-three/sdc.vdi"
+              ]
+            end
+    end
+
+
+    if servers["deploy_cicd_vm"] == "true"
+    config.vm.define servers["cicd_k8s_vmname"] do |cicd|
+          cicd.vm.box = "centos/7"
+          cicd.vm.hostname = servers["cicd_k8s_hostname"]
+          cicd.vm.network "private_network", ip: servers["cicd_k8s_ip"]
+          cicd.vm.provision "shell", path: "./nodes/config.sh"
+          cicd.vm.provider "virtualbox" do |v|
+            v.customize [
+              'modifyvm', :id,
+              '--groups', '/kubeSpray/cicd'
+            ]
+            v.name = servers["cicd_k8s_vmname"]
+            v.memory = 1000
+            v.cpus = 4
+          end
+      end
+    end
+
+
+    config.vm.define servers["masterone_k8s_vmname"] do |masterone|
+      masterone.vm.box = "centos/7"
+      masterone.vm.hostname = servers["masterone_k8s_hostname"]
+      masterone.vm.network "private_network", ip: servers["masterone_k8s_ip"]
+      masterone.vm.provision "file", source: "./password/password.txt", destination: "/tmp/password.txt"
+      masterone.vm.provision "file", source: "./ansible_conf/ansible.cfg", destination: "/tmp/ansible.cfg"
+      masterone.vm.provision "file", source: "../ansible", destination: "/tmp/ansible"
+      masterone.vm.provision "file", source: "../MetalLB", destination: "/tmp/MetalLB"
+      if servers["deploy_cicd_vm"] == "false"
+        masterone.vm.provision "shell", path: "./bastion/configbastion.sh", args: [servers["masterone_k8s_hostname"], servers["mastertwo_k8s_hostname"], servers["masterthree_k8s_hostname"], servers["workerone_k8s_hostname"], servers["workertwo_k8s_hostname"], servers["workerthree_k8s_hostname"]]
+      end
+      if servers["deploy_cicd_vm"] == "true"
+        masterone.vm.provision "shell", path: "./bastion/configbastion.sh", args: [servers["masterone_k8s_hostname"], servers["mastertwo_k8s_hostname"], servers["masterthree_k8s_hostname"], servers["workerone_k8s_hostname"], servers["workertwo_k8s_hostname"], servers["workerthree_k8s_hostname"], servers["cicd_k8s_hostname"]]
+      end
+      masterone.vm.provider "virtualbox" do |v|
+        v.customize [
+          'modifyvm', :id,
+          '--groups', '/kubeSpray/masters'
+        ]
+        v.name = servers["masterone_k8s_vmname"]
+        v.memory = 4000
+        v.cpus = 4
+  end
+end
+
+end
