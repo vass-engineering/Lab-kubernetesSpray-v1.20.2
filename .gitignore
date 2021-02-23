@@ -1,4 +1,4 @@
 vagrant/.vagrant
 vagrant/.k8sStorage
-vagrant/.config
+vagrant/config
 kubeconfig
